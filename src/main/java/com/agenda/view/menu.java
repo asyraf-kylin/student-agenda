@@ -245,11 +245,11 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Tingkat Kesulitan", "Bobot Tugas", "Deskripsi", "Deadline", "Estimasi", "Prioritas", "Status"
+                "Mata Kuliah", "Tingkat Kesulitan", "Bobot Tugas", "Deskripsi", "Estimasi", "Deadline", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
@@ -362,7 +362,7 @@ public class menu extends javax.swing.JFrame {
         );
 
         jLabel12.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel12.setText("Total Tugas:");
+        jLabel12.setText("Total Pertemuan:");
 
         jLabelToTugas3.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabelToTugas3.setText("0");
@@ -422,14 +422,14 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Lokasi", "Deskripsi", "Tanggal", "Jam", "Proritas", "Status"
+                "Mata Kuliah", "Lokasi", "Deskripsi", "Tanggal", "Sesi", "Deadline", "Proritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -537,7 +537,7 @@ public class menu extends javax.swing.JFrame {
         );
 
         jLabel9.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel9.setText("Total Tugas:");
+        jLabel9.setText("Total Kegiatan:");
 
         jLabelToTugas2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabelToTugas2.setText("0");
@@ -597,14 +597,14 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nama Kegiatan", "Lokasi", "Jumlah Anggota", "Deskripsi", "Tanggal", "Jam", "Prioritas", "Status"
+                "Nama Kegiatan", "Lokasi", "Jumlah Anggota", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -647,14 +647,14 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Materi", "Durasi", "Deskripsi", "Tanggal", "Jam", "Prioritas", "Status"
+                "Mata Kuliah", "Materi", "Durasi", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -729,7 +729,7 @@ public class menu extends javax.swing.JFrame {
         );
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel6.setText("Total Tugas:");
+        jLabel6.setText("Total Pembelajaran:");
 
         jLabelToTugas1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabelToTugas1.setText("0");
