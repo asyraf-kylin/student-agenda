@@ -597,7 +597,7 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nama Kegiatan", "Lokasi", "Jumlah Anggota", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
+                "Kegiatan", "Lokasi", "Anggota", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {

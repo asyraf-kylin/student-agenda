@@ -31,6 +31,23 @@ public class addkegiatan extends javax.swing.JFrame {
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        textLokasi = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        textAnggota = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        textDeskripsi = new javax.swing.JTextField();
+        textNamaKegiatan = new javax.swing.JTextField();
+        textDeadline = new javax.swing.JTextField();
+        comboPrioritas = new javax.swing.JComboBox<>();
+        textJam = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        textTanggal = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -44,6 +61,41 @@ public class addkegiatan extends javax.swing.JFrame {
         jLabel1.setText("Tambah Kegiatan");
         jLabel1.setToolTipText("");
 
+        jLabel2.setText("Deskripsi:");
+
+        jLabel3.setText("Deadline:");
+
+        jLabel6.setText("Kegiatan:");
+
+        jLabel7.setText("Lokasi:");
+
+        jLabel8.setText("Anggota:");
+
+        textLokasi.addActionListener(this::textLokasiActionPerformed);
+
+        jLabel4.setText("Prioritas:");
+
+        textAnggota.addActionListener(this::textAnggotaActionPerformed);
+
+        jLabel5.setText("Keterangan:");
+
+        textDeskripsi.addActionListener(this::textDeskripsiActionPerformed);
+
+        textNamaKegiatan.addActionListener(this::textNamaKegiatanActionPerformed);
+
+        textDeadline.addActionListener(this::textDeadlineActionPerformed);
+
+        comboPrioritas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboPrioritas.addActionListener(this::comboPrioritasActionPerformed);
+
+        textJam.addActionListener(this::textJamActionPerformed);
+
+        jLabel9.setText("Tanggal:");
+
+        textTanggal.addActionListener(this::textTanggalActionPerformed);
+
+        jLabel10.setText("Jam:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -54,6 +106,45 @@ public class addkegiatan extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSave)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel3))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(textDeskripsi)
+                                    .addComponent(textDeadline)
+                                    .addComponent(comboPrioritas, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(63, 63, 63)
+                                    .addComponent(jLabel5)
+                                    .addGap(56, 56, 56))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(90, 90, 90)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(textLokasi, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textNamaKegiatan, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textJam, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(27, 27, 27)
+                                .addComponent(textTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel6)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(100, 100, 100)
@@ -63,7 +154,41 @@ public class addkegiatan extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(470, Short.MAX_VALUE)
+                .addGap(109, 109, 109)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(textNamaKegiatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(textLokasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textJam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textDeskripsi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboPrioritas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
                     .addComponent(btnCancel))
@@ -82,6 +207,38 @@ public class addkegiatan extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void textLokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textLokasiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textLokasiActionPerformed
+
+    private void textAnggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textAnggotaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textAnggotaActionPerformed
+
+    private void textDeskripsiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textDeskripsiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textDeskripsiActionPerformed
+
+    private void textNamaKegiatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textNamaKegiatanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textNamaKegiatanActionPerformed
+
+    private void textDeadlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textDeadlineActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textDeadlineActionPerformed
+
+    private void comboPrioritasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrioritasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboPrioritasActionPerformed
+
+    private void textJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textJamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textJamActionPerformed
+
+    private void textTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textTanggalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textTanggalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -109,6 +266,23 @@ public class addkegiatan extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> comboPrioritas;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField textAnggota;
+    private javax.swing.JTextField textDeadline;
+    private javax.swing.JTextField textDeskripsi;
+    private javax.swing.JTextField textJam;
+    private javax.swing.JTextField textLokasi;
+    private javax.swing.JTextField textNamaKegiatan;
+    private javax.swing.JTextField textTanggal;
     // End of variables declaration//GEN-END:variables
 }
