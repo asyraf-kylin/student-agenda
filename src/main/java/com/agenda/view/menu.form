@@ -314,8 +314,8 @@
                             <Column editable="false" title="Tingkat Kesulitan" type="java.lang.String"/>
                             <Column editable="false" title="Bobot Tugas" type="java.lang.Integer"/>
                             <Column editable="false" title="Deskripsi" type="java.lang.String"/>
-                            <Column editable="false" title="Deadline" type="java.lang.String"/>
                             <Column editable="false" title="Estimasi" type="java.lang.Integer"/>
+                            <Column editable="false" title="Deadline" type="java.lang.String"/>
                             <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
                             <Column editable="false" title="Status" type="java.lang.Boolean"/>
                           </Table>
@@ -592,7 +592,7 @@
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="12" style="1"/>
                             </Property>
-                            <Property name="text" type="java.lang.String" value="Total Tugas:"/>
+                            <Property name="text" type="java.lang.String" value="Total Pertemuan:"/>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabelToTugas3">
@@ -625,18 +625,24 @@
                     <Component class="javax.swing.JTable" name="tblPertemuan">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="7" rowCount="0">
+                          <Table columnCount="8" rowCount="0">
                             <Column editable="false" title="Mata Kuliah" type="java.lang.String"/>
                             <Column editable="false" title="Lokasi" type="java.lang.String"/>
                             <Column editable="false" title="Deskripsi" type="java.lang.String"/>
                             <Column editable="false" title="Tanggal" type="java.lang.String"/>
-                            <Column editable="false" title="Jam" type="java.lang.String"/>
+                            <Column editable="false" title="Sesi" type="java.lang.String"/>
+                            <Column editable="false" title="Deadline" type="java.lang.String"/>
                             <Column editable="false" title="Proritas" type="java.lang.Boolean"/>
                             <Column editable="false" title="Status" type="java.lang.Boolean"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -887,7 +893,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="12" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Total Tugas:"/>
+                        <Property name="text" type="java.lang.String" value="Total Kegiatan:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabelToTugas2">
@@ -920,19 +926,25 @@
                 <Component class="javax.swing.JTable" name="tblKegiatan">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="8" rowCount="0">
-                        <Column editable="false" title="Nama Kegiatan" type="java.lang.String"/>
+                      <Table columnCount="9" rowCount="0">
+                        <Column editable="false" title="Kegiatan" type="java.lang.String"/>
                         <Column editable="false" title="Lokasi" type="java.lang.String"/>
-                        <Column editable="false" title="Jumlah Anggota" type="java.lang.Integer"/>
+                        <Column editable="false" title="Anggota" type="java.lang.Integer"/>
                         <Column editable="false" title="Deskripsi" type="java.lang.String"/>
                         <Column editable="false" title="Tanggal" type="java.lang.String"/>
                         <Column editable="false" title="Jam" type="java.lang.String"/>
+                        <Column editable="false" title="Deadline" type="java.lang.String"/>
                         <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
                         <Column editable="false" title="Status" type="java.lang.Boolean"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -1034,19 +1046,25 @@
                 <Component class="javax.swing.JTable" name="tblBelajar">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="8" rowCount="0">
+                      <Table columnCount="9" rowCount="0">
                         <Column editable="false" title="Mata Kuliah" type="java.lang.String"/>
                         <Column editable="false" title="Materi" type="java.lang.String"/>
                         <Column editable="false" title="Durasi" type="java.lang.Integer"/>
                         <Column editable="false" title="Deskripsi" type="java.lang.String"/>
                         <Column editable="false" title="Tanggal" type="java.lang.String"/>
                         <Column editable="false" title="Jam" type="java.lang.String"/>
-                        <Column editable="true" title="Prioritas" type="java.lang.Boolean"/>
+                        <Column editable="false" title="Deadline" type="java.lang.String"/>
+                        <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
                         <Column editable="false" title="Status" type="java.lang.Boolean"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                       <TableColumnModel selectionModel="0">
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
@@ -1266,7 +1284,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="12" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Total Tugas:"/>
+                        <Property name="text" type="java.lang.String" value="Total Pembelajaran:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabelToTugas1">
