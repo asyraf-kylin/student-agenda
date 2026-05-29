@@ -4,6 +4,7 @@
  */
 package com.agenda.view;
 
+
 /**
  *
  * @author Ajax
@@ -11,7 +12,7 @@ package com.agenda.view;
 public class menu extends javax.swing.JFrame {
     private String currentUser;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(menu.class.getName());
-
+    
     /**
      * Creates new form login
      */
@@ -38,6 +39,87 @@ public class menu extends javax.swing.JFrame {
     
     private void tampilkanWaktu() {
     java.util.Timer timer = new java.util.Timer();
+    tblTugas.addMouseListener(new java.awt.event.MouseAdapter() {
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        if (evt.getClickCount() == 2) { // Deteksi Double Click
+            int barisSelected = tblTugas.getSelectedRow();
+            if (barisSelected != -1) {
+                // Saring data dari listUtama yang merupakan instance dari tugas_kuliah
+                java.util.ArrayList<com.agenda.model.tugas_kuliah> listTugas = new java.util.ArrayList<>();
+                for (com.agenda.model.agenda a : com.agenda.util.DataAgenda.listUtama) {
+                    if (a instanceof com.agenda.model.tugas_kuliah) {
+                        listTugas.add((com.agenda.model.tugas_kuliah) a);
+                    }
+                }
+                
+                // Ambil objek murni yang di-klik
+                com.agenda.model.agenda agendaDipilih = listTugas.get(barisSelected);
+                
+                // Buka frame aksipengguna, lempar referensi menu utama (this) dan objek agendanya
+                aksipengguna aksi = new aksipengguna(menu.this, agendaDipilih);
+                aksi.setVisible(true);
+                }
+            }
+        }
+    });
+    tblPertemuan.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent evt) {
+            if (evt.getClickCount() == 2) { 
+                int barisSelected = tblPertemuan.getSelectedRow();
+                if (barisSelected != -1) {
+                    java.util.ArrayList<com.agenda.model.pertemuan_kuliah> listPertemuan = new java.util.ArrayList<>();
+                    for (com.agenda.model.agenda a : com.agenda.util.DataAgenda.listUtama) {
+                        if (a instanceof com.agenda.model.pertemuan_kuliah) {
+                                listPertemuan.add((com.agenda.model.pertemuan_kuliah) a);
+                        }
+                    }
+                    com.agenda.model.agenda agendaDipilih = listPertemuan.get(barisSelected);
+                    aksipengguna aksi = new aksipengguna(menu.this, agendaDipilih);
+                    aksi.setVisible(true);
+                }
+            }
+        }
+    });
+    tblKegiatan.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) { 
+                    int barisSelected = tblKegiatan.getSelectedRow();
+                    if (barisSelected != -1) {
+                        java.util.ArrayList<com.agenda.model.kegiatan_ukm> listKegiatan = new java.util.ArrayList<>();
+                        for (com.agenda.model.agenda a : com.agenda.util.DataAgenda.listUtama) {
+                            if (a instanceof com.agenda.model.kegiatan_ukm) {
+                                listKegiatan.add((com.agenda.model.kegiatan_ukm) a);
+                            }
+                        }
+                        com.agenda.model.agenda agendaDipilih = listKegiatan.get(barisSelected);
+                        aksipengguna aksi = new aksipengguna(menu.this, agendaDipilih);
+                        aksi.setVisible(true);
+                    }
+                }
+            }
+        });
+        tblBelajar.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) { 
+                    int barisSelected = tblBelajar.getSelectedRow();
+                    if (barisSelected != -1) {
+                        java.util.ArrayList<com.agenda.model.belajar_mandiri> listBelajar = new java.util.ArrayList<>();
+                        for (com.agenda.model.agenda a : com.agenda.util.DataAgenda.listUtama) {
+                            if (a instanceof com.agenda.model.belajar_mandiri) {
+                                listBelajar.add((com.agenda.model.belajar_mandiri) a);
+                            }
+                        }
+                        com.agenda.model.agenda agendaDipilih = listBelajar.get(barisSelected);
+                        aksipengguna aksi = new aksipengguna(menu.this, agendaDipilih);
+                        aksi.setVisible(true);
+                    }
+                }
+            }
+        });
     
     new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
         @Override
@@ -837,7 +919,7 @@ public class menu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void TambahPembelajaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPembelajaranActionPerformed
         // Kosongkan parameternya sesuai bawaan JFrame
         addbelajar formPopUp = new addbelajar(); 
@@ -873,7 +955,7 @@ public class menu extends javax.swing.JFrame {
 
     private void TambahTugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahTugasActionPerformed
         // Kosongkan parameternya sesuai bawaan JFrame
-        addtugas formPopUp = new addtugas(); 
+        addtugas formPopUp = new addtugas(this, null); 
     
         // Supaya posisi pop up tetap presisi di tengah menu utama
         formPopUp.setLocationRelativeTo(this);

@@ -20,6 +20,9 @@ public abstract class agenda {
     }
 
     public boolean cekBentrok(Date DeadlineBaru) {
+        if (this.Deadline == null || DeadlineBaru == null) {
+            return false;
+        }
         return this.Deadline.equals(DeadlineBaru);
     }
 }

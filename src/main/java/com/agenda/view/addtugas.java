@@ -9,16 +9,41 @@ package com.agenda.view;
  * @author ajax
  */
 public class addtugas extends javax.swing.JFrame {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addtugas.class.getName());
-
+    private com.agenda.model.tugas_kuliah dataEdit = null;
+    private menu mainForm;
     /**
      * Creates new form NewJFrame
      */
+    public addtugas(menu mainForm, com.agenda.model.tugas_kuliah tugas) {
+        initComponents();
+        this.mainForm = mainForm;
+        this.dataEdit = tugas;
+        this.setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        // PENGAMAN: Cek apakah objek tugas ada isinya (Mode Edit) atau null (Mode Tambah Baru)
+        if (tugas != null) {
+            // Mode EDIT: Isi data ke form
+            textDeskripsi.setText(tugas.Deskripsi);
+            textMatkul.setText(tugas.MataKuliah);
+            textBobot.setText(String.valueOf(tugas.Bobot));
+            comboKesulitan.setSelectedItem(tugas.TingkatKesulitan);
+            comboPrioritas.setSelectedItem(tugas.Prioritas ? "Tinggi" : "Biasa");
+            
+            btnSave.setText("Update"); // Ganti label tombol
+        } else {
+            // Mode TAMBAH BARU: Pastikan form kosong
+            textDeskripsi.setText("");
+            textMatkul.setText("");
+            textBobot.setText("");
+            btnSave.setText("Simpan"); // Kembalikan label tombol
+        }
+    }
+    
     public addtugas() {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,6 +75,7 @@ public class addtugas extends javax.swing.JFrame {
         setResizable(false);
 
         btnSave.setText("Simpan");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
 
         btnCancel.setText("Batal");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
@@ -199,6 +225,20 @@ public class addtugas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboKesulitanActionPerformed
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if (dataEdit == null) {
+        // OPERASI ADD: Buat objek tugas baru, isi datanya, masukkan ke DataAgenda.listUtama
+        } else {
+        // OPERASI EDIT: Update isi variabel dari objek dataEdit yang sudah ada
+        dataEdit.Deskripsi = textDeskripsi.getText();
+        dataEdit.MataKuliah = textMatkul.getText();
+        // ... teruskan update untuk field lainnya
+        }
+    // mainForm.loadDataKeTabel(); // Refresh tabel di menu utama
+        this.dispose();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -219,7 +259,7 @@ public class addtugas extends javax.swing.JFrame {
         //</editor-fold>        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new addtugas().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new addtugas(null, null).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

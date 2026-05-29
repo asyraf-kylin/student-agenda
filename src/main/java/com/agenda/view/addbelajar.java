@@ -9,9 +9,28 @@ package com.agenda.view;
  * @author ajax
  */
 public class addbelajar extends javax.swing.JFrame {
-    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addbelajar.class.getName());
+    private com.agenda.model.belajar_mandiri dataEdit = null;
+    private menu mainForm;
 
+// Constructor Mode Edit
+    public addbelajar(menu mainForm, com.agenda.model.belajar_mandiri belajar) {
+        initComponents();
+        this.mainForm = mainForm;
+        this.dataEdit = belajar;
+        this.setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Agar tidak menutup menu utama
+    
+    // Set field form input secara otomatis dari data lama
+        textDeskripsi.setText(belajar.Deskripsi);
+        textMatkul.setText(belajar.MataKuliah);
+        TextMateri.setText(belajar.Materi);
+        textDurasi.setText(String.valueOf(belajar.Durasi));
+        comboPrioritas.setSelectedItem(belajar.Prioritas ? "Tinggi" : "Biasa");
+    
+    // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
+        btnSave.setText("Update");
+    }
     /**
      * Creates new form NewJFrame
      */
@@ -53,6 +72,7 @@ public class addbelajar extends javax.swing.JFrame {
         setResizable(false);
 
         btnSave.setText("Simpan");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
 
         btnCancel.setText("Batal");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
@@ -235,6 +255,10 @@ public class addbelajar extends javax.swing.JFrame {
     private void textTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textTanggalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textTanggalActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments

@@ -11,7 +11,32 @@ package com.agenda.view;
 public class addkegiatan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addkegiatan.class.getName());
+    private com.agenda.model.kegiatan_ukm dataEdit = null;
+    private menu mainForm;
 
+// Constructor Mode Edit
+    public addkegiatan(menu mainForm, com.agenda.model.kegiatan_ukm kegiatan) {
+        initComponents();
+        this.mainForm = mainForm;
+        this.dataEdit = kegiatan;
+        this.setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+    
+    // Set field form input secara otomatis dari data lama
+        textDeskripsi.setText(kegiatan.Deskripsi);
+        textNamaKegiatan.setText(kegiatan.NamaKegiatan);
+        textLokasi.setText(kegiatan.Lokasi);
+    
+    // Gabungkan array anggota menjadi satu string dipisahkan koma untuk JTextField
+        if (kegiatan.Anggota != null) {
+            textAnggota.setText(String.join(", ", kegiatan.Anggota));
+        }
+    
+        comboPrioritas.setSelectedItem(kegiatan.Prioritas ? "Tinggi" : "Biasa");
+    
+    // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
+        btnSave.setText("Update");
+    }
     /**
      * Creates new form NewJFrame
      */
@@ -53,6 +78,7 @@ public class addkegiatan extends javax.swing.JFrame {
         setResizable(false);
 
         btnSave.setText("Simpan");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
 
         btnCancel.setText("Batal");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
@@ -237,6 +263,10 @@ public class addkegiatan extends javax.swing.JFrame {
     private void textTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textTanggalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textTanggalActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments

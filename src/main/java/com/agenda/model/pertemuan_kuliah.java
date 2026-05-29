@@ -9,8 +9,8 @@ package com.agenda.model;
  * @author Ajax
  */
 public class pertemuan_kuliah extends agenda {
-    String Lokasi;
-    String MataKuliah;
+    public String Lokasi;
+    public String MataKuliah;
 
     public void tambahPertemuan() {
         System.out.println("Pertemuan matkul " + MataKuliah + " di " + Lokasi + " dicatat.");
