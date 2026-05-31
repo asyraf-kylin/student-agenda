@@ -162,7 +162,6 @@ public class aksipengguna extends javax.swing.JFrame {
             
             if (konfirmasi == JOptionPane.YES_OPTION) {
                 // Hapus data dari Array List Pusat
-                com.agenda.util.DataAgenda.listUtama.remove(agendaDipilih);
                 
                 // Refresh visual tabel di menu utama (Pastikan fungsi ini ada di menu.java)
                 if (mainForm != null) {

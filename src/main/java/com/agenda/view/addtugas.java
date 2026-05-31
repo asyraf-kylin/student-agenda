@@ -227,14 +227,7 @@ public class addtugas extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
-        if (dataEdit == null) {
-        // OPERASI ADD: Buat objek tugas baru, isi datanya, masukkan ke DataAgenda.listUtama
-        } else {
-        // OPERASI EDIT: Update isi variabel dari objek dataEdit yang sudah ada
-        dataEdit.Deskripsi = textDeskripsi.getText();
-        dataEdit.MataKuliah = textMatkul.getText();
-        // ... teruskan update untuk field lainnya
-        }
+        
     // mainForm.loadDataKeTabel(); // Refresh tabel di menu utama
         this.dispose();
     }//GEN-LAST:event_btnSaveActionPerformed

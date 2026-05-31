@@ -8,17 +8,18 @@ package com.agenda.util;
  *
  * @author Ajax
  */
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 
 public class koneksi {
     private static final String URL = "jdbc:mysql://localhost:3306/db_agendaku";
     private static final String USER = "root";
     private static final String PASS = "";
 
-    public static Connection getConnection() {
+    // Mengubah nama method menjadi getKoneksi() agar sinkron dengan file GUI & Model
+    public static Connection getKoneksi() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -28,9 +29,5 @@ public class koneksi {
             System.err.println("Koneksi Gagal: " + e.getMessage());
         }
         return conn;
-    }
-
-    public static void main(String[] args) {
-        getConnection();
     }
 }

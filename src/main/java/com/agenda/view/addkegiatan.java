@@ -23,19 +23,21 @@ public class addkegiatan extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     
     // Set field form input secara otomatis dari data lama
-        textDeskripsi.setText(kegiatan.Deskripsi);
-        textNamaKegiatan.setText(kegiatan.NamaKegiatan);
-        textLokasi.setText(kegiatan.Lokasi);
+        if (kegiatan != null) {
+            textDeskripsi.setText(kegiatan.Deskripsi);
+            textNamaKegiatan.setText(kegiatan.NamaKegiatan);
+            textLokasi.setText(kegiatan.Lokasi);
     
     // Gabungkan array anggota menjadi satu string dipisahkan koma untuk JTextField
-        if (kegiatan.Anggota != null) {
-            textAnggota.setText(String.join(", ", kegiatan.Anggota));
-        }
+            if (kegiatan.Anggota != null) {
+                textAnggota.setText(String.join(", ", kegiatan.Anggota));
+            }
     
-        comboPrioritas.setSelectedItem(kegiatan.Prioritas ? "Tinggi" : "Biasa");
+            comboPrioritas.setSelectedItem(kegiatan.Prioritas ? "Tinggi" : "Biasa");
     
     // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
-        btnSave.setText("Update");
+            btnSave.setText("Update");
+        }
     }
     /**
      * Creates new form NewJFrame

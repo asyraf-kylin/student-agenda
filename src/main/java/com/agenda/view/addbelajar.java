@@ -22,14 +22,16 @@ public class addbelajar extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Agar tidak menutup menu utama
     
     // Set field form input secara otomatis dari data lama
-        textDeskripsi.setText(belajar.Deskripsi);
-        textMatkul.setText(belajar.MataKuliah);
-        TextMateri.setText(belajar.Materi);
-        textDurasi.setText(String.valueOf(belajar.Durasi));
-        comboPrioritas.setSelectedItem(belajar.Prioritas ? "Tinggi" : "Biasa");
+        if (belajar != null) {
+            textDeskripsi.setText(belajar.Deskripsi);
+            textMatkul.setText(belajar.MataKuliah);
+            TextMateri.setText(belajar.Materi);
+            textDurasi.setText(String.valueOf(belajar.Durasi));
+            comboPrioritas.setSelectedItem(belajar.Prioritas ? "Tinggi" : "Biasa");
     
     // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
-        btnSave.setText("Update");
+            btnSave.setText("Update");
+        }
     }
     /**
      * Creates new form NewJFrame

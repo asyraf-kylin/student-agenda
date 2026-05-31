@@ -124,18 +124,27 @@ public class login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        String user = textboxNama.getText();
-        String pass = new String(textboxPass.getPassword());
+        String username = textboxNama.getText().trim();
+        String password = new String(textboxPass.getPassword());
 
-    mahasiswa mhs = new mahasiswa();
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nama dan Password tidak boleh kosong!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+    // --- ALUR GUI -> OOP ---
+        com.agenda.model.mahasiswa mhs = new com.agenda.model.mahasiswa();
     
-    if (mhs.loginDatabase(user, pass)) {
-        JOptionPane.showMessageDialog(null, "Login Berhasil! Selamat datang, " + mhs.getNama());
-        new menu(mhs.getNama()).setVisible(true);
-        this.dispose();
-    } else {
-        JOptionPane.showMessageDialog(null, "Nama atau Sandi Salah!");
-    }
+    // Serahkan verifikasi login sepenuhnya ke objek mahasiswa (OOP -> SQL)
+        if (mhs.loginDatabase(username, password)) {
+            JOptionPane.showMessageDialog(this, "Login Berhasil! Selamat Datang " + mhs.getNama());
+        
+        // Buka menu utama dengan melempar nama user aktif
+            new menu(mhs.getNama()).setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Nama atau Password salah!", "Login Gagal", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void textboxNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textboxNamaActionPerformed
