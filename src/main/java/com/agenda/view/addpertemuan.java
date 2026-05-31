@@ -11,7 +11,29 @@ package com.agenda.view;
 public class addpertemuan extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addpertemuan.class.getName());
+    private com.agenda.model.pertemuan_kuliah dataEdit = null;
+    private menu mainForm;
 
+// Constructor Mode Edit
+    public addpertemuan(menu mainForm, com.agenda.model.pertemuan_kuliah pertemuan) {
+        initComponents();
+        this.mainForm = mainForm;
+        this.dataEdit = pertemuan;
+        this.setLocationRelativeTo(null);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+    
+        if (pertemuan != null) {
+            textDeskripsi.setText(pertemuan.Deskripsi);
+            textMatkul.setText(pertemuan.MataKuliah);
+            textLokasi.setText(pertemuan.Lokasi);
+    // textSesi.setText(pertemuan.Sesi); // Tambahkan jika atribut Sesi sudah siap di model pertemuan_kuliah
+    
+        comboPrioritas.setSelectedItem(pertemuan.Prioritas ? "Tinggi" : "Biasa");
+    
+    // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
+        btnSave.setText("Update");
+        }
+    }
     /**
      * Creates new form NewJFrame
      */
@@ -45,12 +67,13 @@ public class addpertemuan extends javax.swing.JFrame {
         textTanggal = new javax.swing.JTextField();
         textMatkul = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        textSesi = new javax.swing.JTextField();
+        comboSesi = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         btnSave.setText("Simpan");
+        btnSave.addActionListener(this::btnSaveActionPerformed);
 
         btnCancel.setText("Batal");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
@@ -89,7 +112,8 @@ public class addpertemuan extends javax.swing.JFrame {
 
         jLabel9.setText("Sesi:");
 
-        textSesi.addActionListener(this::textSesiActionPerformed);
+        comboSesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
+        comboSesi.addActionListener(this::comboSesiActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +146,7 @@ public class addpertemuan extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(textSesi, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(comboSesi, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,10 +179,10 @@ public class addpertemuan extends javax.swing.JFrame {
                     .addComponent(textTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textSesi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(comboSesi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -172,7 +196,7 @@ public class addpertemuan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboPrioritas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
                     .addComponent(btnCancel))
@@ -211,9 +235,44 @@ public class addpertemuan extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textMatkulActionPerformed
 
-    private void textSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textSesiActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textSesiActionPerformed
+        String deskripsi = textDeskripsi.getText().trim();
+        String matkul = textMatkul.getText().trim();
+        String lokasi = textLokasi.getText().trim();
+        boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
+
+        // Validasi input UI tetap di sini
+        if (deskripsi.isEmpty() || matkul.isEmpty() || lokasi.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // --- GAYA OOP: Bungkus data ke dalam objek model ---
+        com.agenda.model.pertemuan_kuliah p = new com.agenda.model.pertemuan_kuliah();
+        p.MataKuliah = matkul;
+        p.Deskripsi = deskripsi;
+        p.Lokasi = lokasi;
+        p.Prioritas = prioritas;
+
+        // Ambil status apakah sedang edit atau tambah baru
+        boolean isEdit = (dataEdit != null);
+        String username = mainForm.getCurrentUser();
+        int idData = isEdit ? dataEdit.id : -1; // Pastikan class agenda/pertemuan_kuliah kamu punya atribut 'id'
+
+        // Serahkan proses SQL ke object model
+        if (p.simpanKeDatabase(isEdit, username, idData)) {
+            javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Pertemuan berhasil dijadwalkan!" : "Pertemuan berhasil diperbarui!");
+            mainForm.loadTabelPertemuan(); // Refresh UI Utama
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memproses data ke database.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void comboSesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboSesiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboSesiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -242,6 +301,7 @@ public class addpertemuan extends javax.swing.JFrame {
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> comboPrioritas;
+    private javax.swing.JComboBox<String> comboSesi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -255,7 +315,6 @@ public class addpertemuan extends javax.swing.JFrame {
     private javax.swing.JTextField textDeskripsi;
     private javax.swing.JTextField textLokasi;
     private javax.swing.JTextField textMatkul;
-    private javax.swing.JTextField textSesi;
     private javax.swing.JTextField textTanggal;
     // End of variables declaration//GEN-END:variables
 }

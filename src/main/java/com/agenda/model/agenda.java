@@ -3,13 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.agenda.model;
-/**
- *
- * @author Ajax
- */
+
 import java.util.Date;
 
 public abstract class agenda {
+    public int id; // Tambahan atribut ID untuk primary key SQL
     public Date Deadline;
     public boolean Prioritas;
     public String Deskripsi;
@@ -20,6 +18,9 @@ public abstract class agenda {
     }
 
     public boolean cekBentrok(Date DeadlineBaru) {
+        if (this.Deadline == null || DeadlineBaru == null) {
+            return false;
+        }
         return this.Deadline.equals(DeadlineBaru);
     }
 }

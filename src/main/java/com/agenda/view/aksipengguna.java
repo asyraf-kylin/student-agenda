@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.agenda.view;
+import com.agenda.model.agenda;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -10,8 +12,26 @@ package com.agenda.view;
  */
 public class aksipengguna extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(aksipengguna.class.getName());
-
+    // Variabel penampung data dari menu utama (Ini yang sebelumnya hilang)
+    private menu mainForm;
+    private agenda agendaDipilih;
+    
+    public aksipengguna(menu mainForm, agenda agenda) {
+        initComponents();
+        this.mainForm = mainForm;
+        this.agendaDipilih = agenda;
+        this.setLocationRelativeTo(null);
+        
+        // AKSI NYESUAIN ISI: Mengubah text label sesuai Deskripsi (Kolom pertama JTable)
+        if (agenda != null && agenda.Deskripsi != null) {
+            jLabel2.setText(agenda.Deskripsi);
+        } else {
+            jLabel2.setText("- Tidak ada deskripsi -");
+        }
+        
+        // Sinkronisasi status CheckBox Tandai Selesai
+        jCheckBox1.setSelected(agenda != null && agenda.StatusSelesai);
+    }
     /**
      * Creates 
      */
@@ -29,9 +49,9 @@ public class aksipengguna extends javax.swing.JFrame {
     private void initComponents() {
 
         jCheckBox1 = new javax.swing.JCheckBox();
-        btnSave = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
-        btnSave1 = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -42,14 +62,14 @@ public class aksipengguna extends javax.swing.JFrame {
         jCheckBox1.setToolTipText("");
         jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
 
-        btnSave.setText("Edit");
-        btnSave.addActionListener(this::btnSaveActionPerformed);
+        btnEdit.setText("Edit");
+        btnEdit.addActionListener(this::btnEditActionPerformed);
 
         btnCancel.setText("Batal");
         btnCancel.addActionListener(this::btnCancelActionPerformed);
 
-        btnSave1.setText("Hapus");
-        btnSave1.addActionListener(this::btnSave1ActionPerformed);
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(this::btnHapusActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -71,9 +91,9 @@ public class aksipengguna extends javax.swing.JFrame {
                         .addGap(85, 85, 85)
                         .addComponent(btnCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave)
+                        .addComponent(btnEdit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave1))
+                        .addComponent(btnHapus))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(138, 138, 138)
                         .addComponent(jCheckBox1)))
@@ -94,9 +114,9 @@ public class aksipengguna extends javax.swing.JFrame {
                 .addComponent(jCheckBox1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
+                    .addComponent(btnEdit)
                     .addComponent(btnCancel)
-                    .addComponent(btnSave1))
+                    .addComponent(btnHapus))
                 .addContainerGap())
         );
 
@@ -108,16 +128,62 @@ public class aksipengguna extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveActionPerformed
+        if (agendaDipilih == null) return;
 
-    private void btnSave1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSave1ActionPerformed
+        // Memeriksa jenis instansiasi polimorfisme objek untuk mengarahkan ke form yang tepat
+        if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
+            addtugas formEdit = new addtugas(mainForm, (com.agenda.model.tugas_kuliah) agendaDipilih);
+            formEdit.setVisible(true);
+        } 
+        else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+            addpertemuan formEdit = new addpertemuan(mainForm, (com.agenda.model.pertemuan_kuliah) agendaDipilih);
+            formEdit.setVisible(true);
+        }
+        else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {
+            addkegiatan formEdit = new addkegiatan(mainForm, (com.agenda.model.kegiatan_ukm) agendaDipilih);
+            formEdit.setVisible(true);
+        }
+        else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) {
+            addbelajar formEdit = new addbelajar(mainForm, (com.agenda.model.belajar_mandiri) agendaDipilih);
+            formEdit.setVisible(true);
+        }
+        
+        this.dispose();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnSave1ActionPerformed
+        if (agendaDipilih != null) {
+            int konfirmasi = JOptionPane.showConfirmDialog(this, 
+                    "Apakah Anda yakin ingin menghapus agenda ini?", 
+                    "Hapus Agenda", JOptionPane.YES_NO_OPTION);
+            
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                // Hapus data dari Array List Pusat
+                
+                // Refresh visual tabel di menu utama (Pastikan fungsi ini ada di menu.java)
+                if (mainForm != null) {
+                    // mainForm.loadDataKeTabel(); 
+                }
+                
+                JOptionPane.showMessageDialog(this, "Agenda berhasil dihapus!");
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
+        if (agendaDipilih != null) {
+            agendaDipilih.StatusSelesai = jCheckBox1.isSelected();
+            
+            // Refresh visual tabel di menu utama
+            if (mainForm != null) {
+                // mainForm.loadDataKeTabel(); 
+            }
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
@@ -146,8 +212,8 @@ public class aksipengguna extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnSave1;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

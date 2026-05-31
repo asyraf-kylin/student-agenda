@@ -4,6 +4,14 @@
  */
 package com.agenda.view;
 
+import com.agenda.util.koneksi;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Ajax
@@ -11,7 +19,7 @@ package com.agenda.view;
 public class menu extends javax.swing.JFrame {
     private String currentUser;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(menu.class.getName());
-
+    
     /**
      * Creates new form login
      */
@@ -20,8 +28,19 @@ public class menu extends javax.swing.JFrame {
     initComponents();
     this.setLocationRelativeTo(null);
     setAppIcon();
-    labelwelcome.setText("Selamat datang di AgendaKu, " + namaUser + "👋");
+    labelwelcome.setText("Selamat datang di AgendaKu, " + namaUser + " 👋");
     tampilkanWaktu();
+    
+    // Panggil fungsi pemuat data saat menu pertama kali dibuka
+    loadTabelTugas();
+    loadTabelPertemuan();
+    loadTabelKegiatan();
+    loadTabelBelajar();
+    }
+
+// Menyediakan akses username aktif untuk form input (addtugas, addpertemuan, dll)
+    public String getCurrentUser() {
+        return currentUser;
     }
     
     private void setAppIcon() {
@@ -38,7 +57,6 @@ public class menu extends javax.swing.JFrame {
     
     private void tampilkanWaktu() {
     java.util.Timer timer = new java.util.Timer();
-    
     new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -49,7 +67,172 @@ public class menu extends javax.swing.JFrame {
             labeltime.setText(waktuSekarang);
         }
     }).start();
-}
+    }
+    
+    public void loadTabelTugas() {
+        DefaultTableModel model = (DefaultTableModel) tblTugas.getModel();
+        model.setRowCount(0); // Reset tabel agar tidak menumpuk
+
+        String sql = "SELECT * FROM tabel_tugas WHERE username = ?";
+        try (Connection conn = koneksi.getKoneksi();
+            PreparedStatement pst = conn.prepareStatement(sql)) {
+        
+            pst.setString(1, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                // 1. Bungkus data relasional database ke dalam Objek OOP
+                    com.agenda.model.tugas_kuliah tugas = new com.agenda.model.tugas_kuliah();
+                    tugas.id = rs.getInt("id");
+                    tugas.MataKuliah = rs.getString("MataKuliah");
+                    tugas.Deskripsi = rs.getString("Deskripsi");
+                    tugas.Deadline = rs.getTimestamp("Deadline");
+                    tugas.Bobot = rs.getInt("Bobot");
+                    tugas.TingkatKesulitan = rs.getString("TingkatKesulitan");
+                    tugas.Prioritas = rs.getBoolean("Prioritas");
+                    tugas.StatusSelesai = rs.getBoolean("StatusSelesai");
+
+                // 2. Tampilkan properti objek ke dalam baris JTable GUI
+                    Object[] row = {
+                        tugas.Deskripsi,
+                        tugas.MataKuliah,
+                        tugas.Deadline,
+                        tugas.Bobot,
+                        tugas.TingkatKesulitan,
+                        tugas.Prioritas ? "Tinggi" : "Biasa",
+                        tugas.StatusSelesai ? "Selesai" : "Belum Selesai"
+                    };
+                
+                // Menyimpan objek aslinya ke dalam row properties atau bisa diidentifikasi nanti
+                    model.addRow(row);
+               
+                // Trik Menyimpan ID Tersembunyi: Kita bisa manfaatkan custom array penyimpanan jika dibutuhkan, 
+                // atau mencarinya kembali berdasarkan deskripsi saat diklik.
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Load Tabel Tugas: " + e.getMessage());
+        }
+    }
+    
+    public void loadTabelPertemuan() {
+        DefaultTableModel model = (DefaultTableModel) tblPertemuan.getModel();
+        model.setRowCount(0); // Bersihkan tabel terlebih dahulu
+
+        String sql = "SELECT id, MataKuliah, Deskripsi, Lokasi, Prioritas, StatusSelesai FROM tabel_pertemuan WHERE username = ?";
+
+        try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, currentUser);
+            try (java.sql.ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+
+                    // AMAN & OOP: Ambil tipe data asli dari database
+                    String matkul = rs.getString("MataKuliah");
+                    String deskripsi = rs.getString("Deskripsi");
+                    String lokasi = rs.getString("Lokasi");
+
+                    // Skenario 1: Jika kolom Prioritas di JTable kamu adalah Text (String) "Tinggi"/"Biasa"
+                    String prioritasStr = rs.getBoolean("Prioritas") ? "Tinggi" : "Biasa";
+
+                    // Skenario 2: Jika kolom StatusSelesai di JTable adalah Checkbox (Boolean)
+                    boolean statusSelesai = rs.getBoolean("StatusSelesai");
+
+                    // MASUKKAN KE TABEL (Sesuaikan urutan kolom JTable kamu di NetBeans)
+                    // Pastikan kolom untuk checkbox menerima 'statusSelesai' (boolean), BUKAN String!
+                    model.addRow(new Object[]{
+                        matkul, // Kolom 0 (String)
+                        deskripsi, // Kolom 1 (String)
+                        lokasi, // Kolom 2 (String)
+                        prioritasStr, // Kolom 3 (String "Tinggi"/"Biasa")
+                        statusSelesai // Kolom 4 (Boolean asli untuk Checkbox FlatLaf)
+                    });
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error Load Tabel Pertemuan: " + e.getMessage());
+        }
+    }
+    
+    public void loadTabelKegiatan() {
+        DefaultTableModel model = (DefaultTableModel) tblKegiatan.getModel();
+        model.setRowCount(0);
+
+        String sql = "SELECT * FROM tabel_kegiatan WHERE username = ?";
+        try (Connection conn = koneksi.getKoneksi();
+            PreparedStatement pst = conn.prepareStatement(sql)) {
+        
+            pst.setString(1, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    com.agenda.model.kegiatan_ukm k = new com.agenda.model.kegiatan_ukm();
+                    k.id = rs.getInt("id");
+                    k.NamaKegiatan = rs.getString("NamaKegiatan");
+                    k.Deskripsi = rs.getString("Deskripsi");
+                    k.Deadline = rs.getTimestamp("Deadline");
+                    k.Lokasi = rs.getString("Lokasi");
+                // Konversi string DB kembali ke Array OOP
+                    String dbAnggota = rs.getString("Anggota");
+                    k.Anggota = dbAnggota != null ? dbAnggota.split(",\\s*") : new String[0];
+                    k.Prioritas = rs.getBoolean("Prioritas");
+                    k.StatusSelesai = rs.getBoolean("StatusSelesai");
+
+                    Object[] row = {
+                        k.Deskripsi,
+                        k.NamaKegiatan,
+                        k.Deadline,
+                        k.Lokasi,
+                        String.join(", ", k.Anggota),
+                        k.Prioritas ? "Tinggi" : "Biasa",
+                        k.StatusSelesai ? "Selesai" : "Belum Selesai"
+                    };
+                    model.addRow(row);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Load Tabel Kegiatan: " + e.getMessage());
+        }
+    }
+    
+    public void loadTabelBelajar() {
+        DefaultTableModel model = (DefaultTableModel) tblBelajar.getModel();
+        model.setRowCount(0);
+
+        String sql = "SELECT * FROM tabel_belajar WHERE username = ?";
+        try (Connection conn = koneksi.getKoneksi();
+            PreparedStatement pst = conn.prepareStatement(sql)) {
+        
+            pst.setString(1, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    com.agenda.model.belajar_mandiri b = new com.agenda.model.belajar_mandiri();
+                    b.id = rs.getInt("id");
+                    b.MataKuliah = rs.getString("MataKuliah");
+                    b.Materi = rs.getString("Materi");
+                    b.Deskripsi = rs.getString("Deskripsi");
+                    b.Deadline = rs.getTimestamp("Deadline");
+                    b.Durasi = rs.getInt("Durasi");
+                    b.Prioritas = rs.getBoolean("Prioritas");
+                    b.StatusSelesai = rs.getBoolean("StatusSelesai");
+
+                    Object[] row = {
+                        b.Deskripsi,
+                        b.MataKuliah,
+                        b.Materi,
+                        b.Deadline,
+                        b.Durasi + " Menit",
+                        b.Prioritas ? "Tinggi" : "Biasa",
+                        b.StatusSelesai ? "Selesai" : "Belum Selesai"
+                    };
+                    model.addRow(row);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Load Tabel Belajar: " + e.getMessage());
+        }
+    }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -263,6 +446,11 @@ public class menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblTugas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblTugasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblTugas);
 
         javax.swing.GroupLayout jPanelTugasUtamaLayout = new javax.swing.GroupLayout(jPanelTugasUtama);
@@ -440,6 +628,11 @@ public class menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblPertemuan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPertemuanMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(tblPertemuan);
 
         javax.swing.GroupLayout jPanelTugasUtama1Layout = new javax.swing.GroupLayout(jPanelTugasUtama1);
@@ -615,6 +808,11 @@ public class menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblKegiatan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKegiatanMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(tblKegiatan);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -663,6 +861,11 @@ public class menu extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblBelajar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBelajarMouseClicked(evt);
             }
         });
         jScrollPane4.setViewportView(tblBelajar);
@@ -837,86 +1040,193 @@ public class menu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void TambahPembelajaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPembelajaranActionPerformed
-        // Kosongkan parameternya sesuai bawaan JFrame
-        addbelajar formPopUp = new addbelajar(); 
     
-        // Supaya posisi pop up tetap presisi di tengah menu utama
-        formPopUp.setLocationRelativeTo(this);
-
-        // Tampilkan jendela melayang
-        formPopUp.setVisible(true);
+    private void TambahPembelajaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPembelajaranActionPerformed
+        new addbelajar(this, null).setVisible(true);
     }//GEN-LAST:event_TambahPembelajaranActionPerformed
 
     private void TambahKegiatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahKegiatanActionPerformed
-        // Kosongkan parameternya sesuai bawaan JFrame
-        addkegiatan formPopUp = new addkegiatan(); 
-    
-        // Supaya posisi pop up tetap presisi di tengah menu utama
-        formPopUp.setLocationRelativeTo(this);
-
-        // Tampilkan jendela melayang
-        formPopUp.setVisible(true);
+        new addkegiatan(this, null).setVisible(true);
     }//GEN-LAST:event_TambahKegiatanActionPerformed
 
     private void TambahPertemuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPertemuanActionPerformed
-        // Kosongkan parameternya sesuai bawaan JFrame
-        addpertemuan formPopUp = new addpertemuan(); 
-    
-        // Supaya posisi pop up tetap presisi di tengah menu utama
-        formPopUp.setLocationRelativeTo(this);
-
-        // Tampilkan jendela melayang
-        formPopUp.setVisible(true);
+        new addpertemuan(this, null).setVisible(true);
     }//GEN-LAST:event_TambahPertemuanActionPerformed
 
     private void TambahTugasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahTugasActionPerformed
-        // Kosongkan parameternya sesuai bawaan JFrame
-        addtugas formPopUp = new addtugas(); 
-    
-        // Supaya posisi pop up tetap presisi di tengah menu utama
-        formPopUp.setLocationRelativeTo(this);
-
-        // Tampilkan jendela melayang
-        formPopUp.setVisible(true);
+        new addtugas(this, null).setVisible(true);
     }//GEN-LAST:event_TambahTugasActionPerformed
-private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {                                         
-    // Menutup jendela JDialog
-    this.dispose();
-}
+
+    private void tblTugasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblTugasMouseClicked
+        // TODO add your handling code here:
+        int row = tblTugas.getSelectedRow();
+        if (row == -1) return;
+
+        String deskripsiTerpilih = tblTugas.getValueAt(row, 0).toString();
+
+    // Cari data lengkap dari database lalu bungkus ke dalam objek OOP
+        com.agenda.model.tugas_kuliah tugas = null;
+        String sql = "SELECT * FROM tabel_tugas WHERE Deskripsi = ? AND username = ?";
+        try (Connection conn = koneksi.getKoneksi();
+            PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, deskripsiTerpilih);
+            pst.setString(2, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    tugas = new com.agenda.model.tugas_kuliah();
+                    tugas.id = rs.getInt("id");
+                    tugas.MataKuliah = rs.getString("MataKuliah");
+                    tugas.Deskripsi = rs.getString("Deskripsi");
+                    tugas.Deadline = rs.getTimestamp("Deadline");
+                    tugas.Bobot = rs.getInt("Bobot");
+                    tugas.TingkatKesulitan = rs.getString("TingkatKesulitan");
+                    tugas.Prioritas = rs.getBoolean("Prioritas");
+                    tugas.StatusSelesai = rs.getBoolean("StatusSelesai");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Ambil Detail Tugas: " + e.getMessage());
+        }
+
+        if (tugas != null) {
+        // Buka form aksipengguna dengan melempar Objek OOP hasil bentukan tadi
+            new aksipengguna(this, tugas).setVisible(true);
+        }
+    }//GEN-LAST:event_tblTugasMouseClicked
+
+    private void tblPertemuanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPertemuanMouseClicked
+        // TODO add your handling code here:
+        int row = tblPertemuan.getSelectedRow();
+        if (row == -1) return;
+
+    // Ambil nilai deskripsi dari kolom pertama baris yang diklik
+        String deskripsiTerpilih = tblPertemuan.getValueAt(row, 0).toString();
+
+        com.agenda.model.pertemuan_kuliah pertemuan = null;
+        String sql = "SELECT * FROM tabel_pertemuan WHERE Deskripsi = ? AND username = ?";
+    
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi();
+            PreparedStatement pst = conn.prepareStatement(sql)) {
         
-private void btnbatalActionPerformed(java.awt.event.ActionEvent evt) {                                         
+            pst.setString(1, deskripsiTerpilih);
+            pst.setString(2, currentUser);
+        
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    pertemuan = new com.agenda.model.pertemuan_kuliah();
+                    pertemuan.id = rs.getInt("id");
+                    pertemuan.MataKuliah = rs.getString("MataKuliah");
+                    pertemuan.Deskripsi = rs.getString("Deskripsi");
+                    pertemuan.Deadline = rs.getTimestamp("Deadline");
+                    pertemuan.Lokasi = rs.getString("Lokasi");
+                    pertemuan.Sesi = rs.getString("Sesi");
+                    pertemuan.Prioritas = rs.getBoolean("Prioritas");
+                    pertemuan.StatusSelesai = rs.getBoolean("StatusSelesai");
+                }
+            }
+        } catch (SQLException e) {
+        System.err.println("Error Ambil Detail Pertemuan: " + e.getMessage());
+        }
+
+        if (pertemuan != null) {
+        // Buka form aksipengguna dan lempar objek pertemuan
+            new aksipengguna(this, pertemuan).setVisible(true);
+        }
+    }//GEN-LAST:event_tblPertemuanMouseClicked
+
+    private void tblKegiatanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKegiatanMouseClicked
+        // TODO add your handling code here:
+        int row = tblKegiatan.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+
+        String deskripsiTerpilih = tblKegiatan.getValueAt(row, 0).toString();
+
+        com.agenda.model.kegiatan_ukm kegiatan = null;
+        String sql = "SELECT * FROM tabel_kegiatan WHERE Deskripsi = ? AND username = ?";
+
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, deskripsiTerpilih);
+            pst.setString(2, currentUser);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    kegiatan = new com.agenda.model.kegiatan_ukm();
+                    kegiatan.id = rs.getInt("id");
+                    kegiatan.NamaKegiatan = rs.getString("NamaKegiatan");
+                    kegiatan.Deskripsi = rs.getString("Deskripsi");
+                    kegiatan.Deadline = rs.getTimestamp("Deadline");
+                    kegiatan.Lokasi = rs.getString("Lokasi");
+
+                    // Konversi string gabungan dari DB menjadi array OOP String[]
+                    String dbAnggota = rs.getString("Anggota");
+                    kegiatan.Anggota = dbAnggota != null ? dbAnggota.split(",\\s*") : new String[0];
+
+                    kegiatan.Prioritas = rs.getBoolean("Prioritas");
+                    kegiatan.StatusSelesai = rs.getBoolean("StatusSelesai");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Ambil Detail Kegiatan UKM: " + e.getMessage());
+        }
+
+        if (kegiatan != null) {
+            // Buka form aksipengguna dan lempar objek kegiatan
+            new aksipengguna(this, kegiatan).setVisible(true);
+        }
+    }//GEN-LAST:event_tblKegiatanMouseClicked
+
+    private void tblBelajarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBelajarMouseClicked
+        // TODO add your handling code here:
+        int row = tblBelajar.getSelectedRow();
+        if (row == -1) {
+            return;
+        }
+
+        String deskripsiTerpilih = tblBelajar.getValueAt(row, 0).toString();
+
+        com.agenda.model.belajar_mandiri belajar = null;
+        String sql = "SELECT * FROM tabel_belajar WHERE Deskripsi = ? AND username = ?";
+
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, deskripsiTerpilih); // Atur parameter WHERE deskripsi
+            pst.setString(2, currentUser);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    belajar = new com.agenda.model.belajar_mandiri();
+                    belajar.id = rs.getInt("id");
+                    belajar.MataKuliah = rs.getString("MataKuliah");
+                    belajar.Materi = rs.getString("Materi");
+                    belajar.Deskripsi = rs.getString("Deskripsi");
+                    belajar.Deadline = rs.getTimestamp("Deadline");
+                    belajar.Durasi = rs.getInt("Durasi");
+                    belajar.Prioritas = rs.getBoolean("Prioritas");
+                    belajar.StatusSelesai = rs.getBoolean("StatusSelesai");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Ambil Detail Belajar Mandiri: " + e.getMessage());
+        }
+
+        if (belajar != null) {
+            // Buka form aksipengguna dan lempar objek belajar mandiri
+            new aksipengguna(this, belajar).setVisible(true);
+        }
+    }//GEN-LAST:event_tblBelajarMouseClicked
+
+    
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {                                         
     // Menutup jendela JDialog
-    this.dispose();
-}
-    public void HitungTugas(){
-        try {
-            java.sql.Connection conn = com.agenda.util.koneksi.getConnection();
-            
-            String sql = "SELECT" + "COUNT(*) as total, " + "SUM(CASE WHEN StatusSelesai = 0 THEN 1 ELSE 0 END) as belum, " +
-                     "SUM(CASE WHEN StatusSelesai = 1 THEN 1 ELSE 0 END) as selesai " +
-                     "FROM tugas_kuliah";
-            
-            java.sql.PreparedStatement pst = conn.prepareStatement(sql);
-            java.sql.ResultSet rs = pst.executeQuery();
-            
-            if (rs.next()) {
-            // 3. Ambil hasil hitungan dari database
-            int total = rs.getInt("total");
-            int belum = rs.getInt("belum");
-            int selesai = rs.getInt("selesai");
-            
-            // 4. Set teks JLabels dengan hasil hitungan database
-            jLabelToTugas.setText(String.valueOf(total));
-            jLabelBSelesai.setText(String.valueOf(belum));
-            jLabelSselesai.setText(String.valueOf(selesai));
-            
-        }
-    } 
-        catch (Exception e) {
-        System.out.println("Gagal memuat ringkasan tugas: " + e.getMessage());
-        }
+        this.dispose();
+    }
+        
+    private void btnbatalActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    // Menutup jendela JDialog
+        this.dispose();
     }
     /**
      * @param args the command line arguments
