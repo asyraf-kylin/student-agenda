@@ -14,57 +14,54 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class pertemuan_kuliah extends agenda {
+
     public String Lokasi;
     public String MataKuliah;
-    public String Sesi; // Tambahkan penampung atribut Sesi dari GUI
+    public String Sesi;
 
-    // ==========================================
-    // LOGIKA SQL UTK OPERASI WRITE (SIMPAN/EDIT)
-    // ==========================================
-    public boolean simpanKeDatabase(String username) {
-        String sql = "INSERT INTO tabel_pertemuan (MataKuliah, Deskripsi, Deadline, Lokasi, Sesi, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = koneksi.getKoneksi();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setString(1, this.MataKuliah);
-            pst.setString(2, this.Deskripsi);
-            pst.setTimestamp(3, this.Deadline != null ? new java.sql.Timestamp(this.Deadline.getTime()) : null);
-            pst.setString(4, this.Lokasi);
-            pst.setString(5, this.Sesi);
-            pst.setBoolean(6, this.Prioritas);
-            pst.setBoolean(7, this.StatusSelesai);
-            pst.setString(8, username);
-            return pst.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error Simpan Pertemuan: " + e.getMessage());
-            return false;
-        }
-    }
+    // ✔️ DIUBAH: Menggunakan java.util.Date agar selaras dengan addpertemuan.java
+    // Catatan: Jika di superclass 'agenda' sudah ada properti 'Deadline' dengan nama yang sama,
+    // kamu bisa hapus baris di bawah ini agar memanfaatkan konsep inheritance (pewarisan) murni.
+    public java.util.Date Deadline;
 
+    // ====================================================================
+    // SATU METHOD UTAMA UNTUK WRITE (INSERT / UPDATE) - SELESAI & RAPI
+    // ====================================================================
     public boolean simpanKeDatabase(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
-            sql = "INSERT INTO tabel_pertemuan (MataKuliah, Deskripsi, Lokasi, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?)";
+            // Kita masukkan Sesi dan Deadline ke dalam database
+            sql = "INSERT INTO tabel_pertemuan (MataKuliah, Deskripsi, Lokasi, Sesi, Deadline, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         } else {
-            sql = "UPDATE tabel_pertemuan SET MataKuliah = ?, Deskripsi = ?, Lokasi = ?, Prioritas = ? WHERE id = ?";
+            sql = "UPDATE tabel_pertemuan SET MataKuliah = ?, Deskripsi = ?, Lokasi = ?, Sesi = ?, Deadline = ?, Prioritas = ? WHERE id = ?";
         }
 
-        try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+        try (Connection conn = koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
 
             // Atribut diambil langsung dari object OOP ini sendiri (this)
             pst.setString(1, this.MataKuliah);
             pst.setString(2, this.Deskripsi);
             pst.setString(3, this.Lokasi);
-            pst.setBoolean(4, this.Prioritas);
+            pst.setString(4, this.Sesi);
+
+            // ✔️ DIUBAH: Konversi java.util.Date ke java.sql.Timestamp untuk tipe DATETIME database MySQL
+            if (this.Deadline != null) {
+                pst.setTimestamp(5, new java.sql.Timestamp(this.Deadline.getTime()));
+            } else {
+                pst.setNull(5, java.sql.Types.TIMESTAMP);
+            }
+
+            pst.setBoolean(6, this.Prioritas);
 
             if (!isEdit) {
-                pst.setBoolean(5, false);
-                pst.setString(6, username);
+                pst.setBoolean(7, false);     // StatusSelesai default false saat tambah data baru
+                pst.setString(8, username);
             } else {
-                pst.setInt(5, idData);
+                pst.setInt(7, idData);        // WHERE id = ? untuk proses update
             }
 
             return pst.executeUpdate() > 0;
-        } catch (java.sql.SQLException e) {
+        } catch (SQLException e) {
             System.err.println("Error Simpan Pertemuan (OOP): " + e.getMessage());
             return false;
         }

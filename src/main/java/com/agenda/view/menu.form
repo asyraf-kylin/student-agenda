@@ -27,6 +27,8 @@
               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               <Component id="labelwelcome" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Component id="labeltime" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
@@ -34,6 +36,13 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jTabbedPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -44,9 +53,17 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="labeltime" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelwelcome" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnLogout" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Component id="jTabbedPane1" max="32767" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -473,7 +490,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="72" max="32767" attributes="0"/>
-                                  <Component id="jLabelSselesai3" min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="lblSelesai" min="-2" pref="41" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -484,7 +501,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelSselesai3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSelesai" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -499,7 +516,7 @@
                             <Property name="text" type="java.lang.String" value="Sudah Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelSselesai3">
+                        <Component class="javax.swing.JLabel" name="lblSelesai">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -522,7 +539,7 @@
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                                          <Component id="jLabelBSelesai3" min="-2" pref="41" max="-2" attributes="0"/>
+                                          <Component id="lblBelumSelesai" min="-2" pref="41" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace pref="69" max="32767" attributes="0"/>
@@ -535,7 +552,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelBSelesai3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblBelumSelesai" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -550,7 +567,7 @@
                             <Property name="text" type="java.lang.String" value="Belum Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelBSelesai3">
+                        <Component class="javax.swing.JLabel" name="lblBelumSelesai">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -572,7 +589,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="64" max="32767" attributes="0"/>
-                                  <Component id="jLabelToTugas3" min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="totPertemuan" min="-2" pref="41" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -583,7 +600,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelToTugas3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="totPertemuan" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -598,7 +615,7 @@
                             <Property name="text" type="java.lang.String" value="Total Pertemuan:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelToTugas3">
+                        <Component class="javax.swing.JLabel" name="totPertemuan">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -628,24 +645,18 @@
                     <Component class="javax.swing.JTable" name="tblPertemuan">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="8" rowCount="0">
+                          <Table columnCount="7" rowCount="0">
                             <Column editable="false" title="Mata Kuliah" type="java.lang.String"/>
                             <Column editable="false" title="Lokasi" type="java.lang.String"/>
                             <Column editable="false" title="Deskripsi" type="java.lang.String"/>
-                            <Column editable="false" title="Tanggal" type="java.lang.String"/>
                             <Column editable="false" title="Sesi" type="java.lang.String"/>
-                            <Column editable="false" title="Deadline" type="java.lang.String"/>
-                            <Column editable="false" title="Proritas" type="java.lang.Boolean"/>
+                            <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
+                            <Column editable="false" title="Tanggal (Deadline)" type="java.lang.String"/>
                             <Column editable="false" title="Status" type="java.lang.Boolean"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="0">
-                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                              <Title/>
-                              <Editor/>
-                              <Renderer/>
-                            </Column>
                             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                               <Title/>
                               <Editor/>
@@ -1330,6 +1341,19 @@
         </Property>
         <Property name="text" type="java.lang.String" value="AgendaKu"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnLogout">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Logout"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
