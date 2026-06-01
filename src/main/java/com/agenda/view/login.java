@@ -8,7 +8,6 @@ package com.agenda.view;
  *
  * @author Ajax
  */
-import com.agenda.model.mahasiswa;
 import javax.swing.JOptionPane;
 
 public class login extends javax.swing.JFrame {

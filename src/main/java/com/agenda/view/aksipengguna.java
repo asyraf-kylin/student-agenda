@@ -3,7 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.agenda.view;
-import com.agenda.model.agenda;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,23 +15,23 @@ import javax.swing.JOptionPane;
  */
 public class aksipengguna extends javax.swing.JFrame {
     
-    // Variabel penampung data dari menu utama (Ini yang sebelumnya hilang)
     private menu mainForm;
-    private agenda agendaDipilih;
-    
-    public aksipengguna(menu mainForm, agenda agenda) {
+    private com.agenda.model.agenda agendaDipilih;
+
+    public aksipengguna(menu mainForm, com.agenda.model.agenda agenda) {
         initComponents();
         this.mainForm = mainForm;
         this.agendaDipilih = agenda;
         this.setLocationRelativeTo(null);
-        
-        // AKSI NYESUAIN ISI: Mengubah text label sesuai Deskripsi (Kolom pertama JTable)
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        // Menyesuaikan teks label sesuai deskripsi agenda
         if (agenda != null && agenda.Deskripsi != null) {
             jLabel2.setText(agenda.Deskripsi);
         } else {
             jLabel2.setText("- Tidak ada deskripsi -");
         }
-        
+
         // Sinkronisasi status CheckBox Tandai Selesai
         jCheckBox1.setSelected(agenda != null && agenda.StatusSelesai);
     }
@@ -54,6 +57,7 @@ public class aksipengguna extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        btnSimpanStatus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -81,37 +85,43 @@ public class aksipengguna extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Nama Agenda");
 
+        btnSimpanStatus.setText("Simpan");
+        btnSimpanStatus.addActionListener(this::btnSimpanStatusActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(btnCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnHapus))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addComponent(jCheckBox1)))
+                .addGap(85, 85, 85)
+                .addComponent(btnCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEdit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnHapus)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSimpanStatus)
+                .addGap(81, 81, 81))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(63, 63, 63)
-                .addComponent(jCheckBox1)
+                .addGap(60, 60, 60)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox1)
+                    .addComponent(btnSimpanStatus))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEdit)
@@ -130,46 +140,45 @@ public class aksipengguna extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        if (agendaDipilih == null) return;
+        if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+            // Downcasting aman dari 'agenda' ke 'pertemuan_kuliah' demi mendapatkan data spesifik subclass
+            com.agenda.model.pertemuan_kuliah p = (com.agenda.model.pertemuan_kuliah) agendaDipilih;
 
-        // Memeriksa jenis instansiasi polimorfisme objek untuk mengarahkan ke form yang tepat
-        if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
-            addtugas formEdit = new addtugas(mainForm, (com.agenda.model.tugas_kuliah) agendaDipilih);
-            formEdit.setVisible(true);
-        } 
-        else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
-            addpertemuan formEdit = new addpertemuan(mainForm, (com.agenda.model.pertemuan_kuliah) agendaDipilih);
-            formEdit.setVisible(true);
+            // Buka frame addpertemuan dengan melemparkan objek untuk diisi ke field-field inputan
+            new addpertemuan(mainForm, p).setVisible(true);
+            this.dispose(); // Tutup pop-up aksi ini
+        } else {
+            JOptionPane.showMessageDialog(this, "Tipe agenda tidak dikenal untuk modul kuliah.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {
-            addkegiatan formEdit = new addkegiatan(mainForm, (com.agenda.model.kegiatan_ukm) agendaDipilih);
-            formEdit.setVisible(true);
-        }
-        else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) {
-            addbelajar formEdit = new addbelajar(mainForm, (com.agenda.model.belajar_mandiri) agendaDipilih);
-            formEdit.setVisible(true);
-        }
-        
-        this.dispose();
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
-        if (agendaDipilih != null) {
-            int konfirmasi = JOptionPane.showConfirmDialog(this, 
-                    "Apakah Anda yakin ingin menghapus agenda ini?", 
-                    "Hapus Agenda", JOptionPane.YES_NO_OPTION);
-            
-            if (konfirmasi == JOptionPane.YES_OPTION) {
-                // Hapus data dari Array List Pusat
-                
-                // Refresh visual tabel di menu utama (Pastikan fungsi ini ada di menu.java)
-                if (mainForm != null) {
-                    // mainForm.loadDataKeTabel(); 
+        if (agendaDipilih == null) {
+            return;
+        }
+
+        int konfirmasi = JOptionPane.showConfirmDialog(this,
+                "Apakah Anda yakin ingin menghapus jadwal \"" + agendaDipilih.Deskripsi + "\"?\nTindakan ini tidak dapat dibatalkan.",
+                "Konfirmasi Hapus Data",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            String sql = "DELETE FROM tabel_pertemuan WHERE id = ?";
+
+            try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+
+                pst.setInt(1, agendaDipilih.id);
+
+                if (pst.executeUpdate() > 0) {
+                    JOptionPane.showMessageDialog(this, "Jadwal pertemuan berhasil dihapus dari sistem.");
+                    mainForm.loadTabelPertemuan(); // Auto-refresh data & card info di dashboard utama
+                    this.dispose();
                 }
-                
-                JOptionPane.showMessageDialog(this, "Agenda berhasil dihapus!");
-                this.dispose();
+            } catch (SQLException e) {
+                System.err.println("Error Hapus Pertemuan: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data dari server database.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -185,6 +194,31 @@ public class aksipengguna extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void btnSimpanStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanStatusActionPerformed
+        // TODO add your handling code here:
+        if (agendaDipilih == null) {
+            return;
+        }
+
+        boolean statusBaru = jCheckBox1.isSelected();
+        String sql = "UPDATE tabel_pertemuan SET StatusSelesai = ? WHERE id = ?";
+
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setBoolean(1, statusBaru);
+            pst.setInt(2, agendaDipilih.id); // Direct access atribut .id public parent
+
+            if (pst.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Status perkembangan agenda berhasil diperbarui!");
+                mainForm.loadTabelPertemuan(); // Refresh tabel & statistik di menu utama secara real-time
+                this.dispose();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Update Status Selesai: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal mengubah status ke database.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSimpanStatusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,6 +248,7 @@ public class aksipengguna extends javax.swing.JFrame {
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnSimpanStatus;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
