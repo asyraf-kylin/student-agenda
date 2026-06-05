@@ -18,9 +18,6 @@ public class belajar_mandiri extends agenda {
     public String Materi;
     public int Durasi;
 
-    // ==========================================
-    // LOGIKA SQL UTK OPERASI WRITE (SIMPAN/EDIT)
-    // ==========================================
     public boolean simpanKeDatabase(String username) {
         String sql = "INSERT INTO tabel_belajar (MataKuliah, Materi, Deskripsi, Deadline, Durasi, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = koneksi.getKoneksi();

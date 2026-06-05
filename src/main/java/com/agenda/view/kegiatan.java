@@ -8,14 +8,14 @@ package com.agenda.view;
  *
  * @author ajax
  */
-public class addkegiatan extends javax.swing.JFrame {
+public class kegiatan extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addkegiatan.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(kegiatan.class.getName());
     private com.agenda.model.kegiatan_ukm dataEdit = null;
     private menu mainForm;
 
 // Constructor Mode Edit
-    public addkegiatan(menu mainForm, com.agenda.model.kegiatan_ukm kegiatan) {
+    public kegiatan(menu mainForm, com.agenda.model.kegiatan_ukm kegiatan) {
         initComponents();
         this.mainForm = mainForm;
         this.dataEdit = kegiatan;
@@ -42,7 +42,7 @@ public class addkegiatan extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public addkegiatan() {
+    public kegiatan() {
         initComponents();
     }
 
@@ -290,7 +290,7 @@ public class addkegiatan extends javax.swing.JFrame {
         //</editor-fold>        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new addkegiatan().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new kegiatan().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

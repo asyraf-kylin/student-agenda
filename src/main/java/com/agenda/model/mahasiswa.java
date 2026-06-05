@@ -20,10 +20,11 @@ public class mahasiswa {
     public mahasiswa() {
     }
 
+    // Metode login tetap sama
     public boolean loginDatabase(String username, String pass) {
         String sql = "SELECT * FROM mahasiswa WHERE nama=? AND password=?";
         
-        try (Connection conn = koneksi.getKoneksi(); // Pakai getKoneksi() biar sinkron dengan utilitasmu
+        try (Connection conn = koneksi.getKoneksi();
              PreparedStatement pst = conn.prepareStatement(sql)) {
             
             pst.setString(1, username);
@@ -41,20 +42,20 @@ public class mahasiswa {
         return false;
     }
 
-    // ========================================================
-    // REFAKTOR POLIMORFISME: Hapus Data Agenda Apapun Dari Sini
-    // ========================================================
-    public boolean hapusAgenda(agenda data) {
+    public boolean hapusAgenda(agenda data, int idData) {
         String namaTabel = "";
-        if (data instanceof tugas_kuliah) namaTabel = "tabel_tugas";
-        else if (data instanceof pertemuan_kuliah) namaTabel = "tabel_pertemuan";
-        else if (data instanceof kegiatan_ukm) namaTabel = "tabel_kegiatan";
-        else if (data instanceof belajar_mandiri) namaTabel = "tabel_belajar";
+        
+        if (data instanceof pertemuan_kuliah) namaTabel = "tabel_pertemuan";
+
+        if (namaTabel.isEmpty()) return false;
 
         String sql = "DELETE FROM " + namaTabel + " WHERE id = ?";
+        
         try (Connection conn = koneksi.getKoneksi();
              PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setInt(1, data.id);
+            
+            pst.setInt(1, idData);
+            
             return pst.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error Hapus Agenda: " + e.getMessage());
@@ -67,6 +68,8 @@ public class mahasiswa {
     }
 
     public void logout() {
-        System.out.println(this.Nama + " telah keluar dari AgendaKu.");
+        String namaUser = (this.Nama != null) ? this.Nama : "Pengguna anonim";
+        System.out.println("Sesi " + namaUser + " telah diakhiri.");
+        this.Nama = null;
     }
 }

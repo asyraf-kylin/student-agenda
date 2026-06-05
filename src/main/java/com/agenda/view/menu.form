@@ -37,13 +37,6 @@
               <Component id="jTabbedPane1" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -57,13 +50,6 @@
               </Group>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Component id="jTabbedPane1" max="32767" attributes="0"/>
-          </Group>
-          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
           </Group>
       </Group>
     </DimensionLayout>
@@ -168,7 +154,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="72" max="32767" attributes="0"/>
-                                  <Component id="jLabelSselesai" min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="lblTugasSelesai" min="-2" pref="41" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -179,7 +165,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelSselesai" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTugasSelesai" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -194,7 +180,7 @@
                             <Property name="text" type="java.lang.String" value="Sudah Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelSselesai">
+                        <Component class="javax.swing.JLabel" name="lblTugasSelesai">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -217,7 +203,7 @@
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                                          <Component id="jLabelBSelesai" min="-2" pref="41" max="-2" attributes="0"/>
+                                          <Component id="lblTugasBelum" min="-2" pref="41" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace pref="69" max="32767" attributes="0"/>
@@ -230,7 +216,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelBSelesai" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTugasBelum" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -245,7 +231,7 @@
                             <Property name="text" type="java.lang.String" value="Belum Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelBSelesai">
+                        <Component class="javax.swing.JLabel" name="lblTugasBelum">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -267,7 +253,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="64" max="32767" attributes="0"/>
-                                  <Component id="jLabelToTugas" min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="totTugas" min="-2" pref="41" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -278,7 +264,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jLabelToTugas" min="-2" max="-2" attributes="0"/>
+                                  <Component id="totTugas" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -293,7 +279,7 @@
                             <Property name="text" type="java.lang.String" value="Total Tugas:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabelToTugas">
+                        <Component class="javax.swing.JLabel" name="totTugas">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -490,7 +476,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="72" max="32767" attributes="0"/>
-                                  <Component id="lblSelesai" min="-2" pref="41" max="-2" attributes="0"/>
+                                  <Component id="lblPertemuanSelesai" min="-2" pref="41" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -501,7 +487,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="lblSelesai" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblPertemuanSelesai" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -516,7 +502,7 @@
                             <Property name="text" type="java.lang.String" value="Sudah Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="lblSelesai">
+                        <Component class="javax.swing.JLabel" name="lblPertemuanSelesai">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -539,7 +525,7 @@
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
-                                          <Component id="lblBelumSelesai" min="-2" pref="41" max="-2" attributes="0"/>
+                                          <Component id="lblPertemuanBelum" min="-2" pref="41" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace pref="69" max="32767" attributes="0"/>
@@ -552,7 +538,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="lblBelumSelesai" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblPertemuanBelum" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="38" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -567,7 +553,7 @@
                             <Property name="text" type="java.lang.String" value="Belum Selesai:"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="lblBelumSelesai">
+                        <Component class="javax.swing.JLabel" name="lblPertemuanBelum">
                           <Properties>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                               <Font name="Arial" size="24" style="0"/>
@@ -1340,11 +1326,6 @@
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="AgendaKu"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jButton1"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnLogout">

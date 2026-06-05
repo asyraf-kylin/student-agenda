@@ -7,20 +7,20 @@ package com.agenda.model;
 import java.util.Date;
 
 public abstract class agenda {
-    public int id; // Tambahan atribut ID untuk primary key SQL
+    
     public Date Deadline;
     public boolean Prioritas;
     public String Deskripsi;
     public boolean StatusSelesai;
 
-    public void tandaiSelesai() {
-        this.StatusSelesai = true;
+    public agenda() {
     }
 
-    public boolean cekBentrok(Date DeadlineBaru) {
-        if (this.Deadline == null || DeadlineBaru == null) {
-            return false;
-        }
-        return this.Deadline.equals(DeadlineBaru);
+    public abstract void tandaiSelesai(int idData);
+
+    public boolean cekBentrok(Date deadlineBaru) {
+        if (this.Deadline == null || deadlineBaru == null) return false;
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");
+        return sdf.format(this.Deadline).equals(sdf.format(deadlineBaru));
     }
 }

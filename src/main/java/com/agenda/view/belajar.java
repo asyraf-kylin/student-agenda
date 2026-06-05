@@ -8,13 +8,13 @@ package com.agenda.view;
  *
  * @author ajax
  */
-public class addbelajar extends javax.swing.JFrame {
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addbelajar.class.getName());
+public class belajar extends javax.swing.JFrame {
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(belajar.class.getName());
     private com.agenda.model.belajar_mandiri dataEdit = null;
     private menu mainForm;
 
 // Constructor Mode Edit
-    public addbelajar(menu mainForm, com.agenda.model.belajar_mandiri belajar) {
+    public belajar(menu mainForm, com.agenda.model.belajar_mandiri belajar) {
         initComponents();
         this.mainForm = mainForm;
         this.dataEdit = belajar;
@@ -36,7 +36,7 @@ public class addbelajar extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public addbelajar() {
+    public belajar() {
         initComponents();
     }
 
@@ -282,7 +282,7 @@ public class addbelajar extends javax.swing.JFrame {
         //</editor-fold>        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new addbelajar().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new belajar().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
