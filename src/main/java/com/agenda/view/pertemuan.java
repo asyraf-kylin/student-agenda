@@ -8,16 +8,18 @@ package com.agenda.view;
  *
  * @author ajax
  */
-public class addpertemuan extends javax.swing.JFrame {
+public class pertemuan extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addpertemuan.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(pertemuan.class.getName());
     private com.agenda.model.pertemuan_kuliah dataEdit = null;
     private menu mainForm;
+    private int idTarget = -1; 
 
-    public addpertemuan(menu mainForm, com.agenda.model.pertemuan_kuliah pertemuan) {
+    public pertemuan(menu mainForm, com.agenda.model.pertemuan_kuliah pertemuan, int idData) {
         initComponents();
         this.mainForm = mainForm;
         this.dataEdit = pertemuan;
+        this.idTarget = idData;
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -39,7 +41,7 @@ public class addpertemuan extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public addpertemuan() {
+    public pertemuan() {
         initComponents();
     }
 
@@ -69,6 +71,7 @@ public class addpertemuan extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         comboSesi = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -112,7 +115,10 @@ public class addpertemuan extends javax.swing.JFrame {
         comboSesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
         comboSesi.addActionListener(this::comboSesiActionPerformed);
 
-        jLabel8.setText("Format Pengisian Deadline: 08/07/2007");
+        jLabel8.setText("Format Pengisian Deadline: 12/12/2026");
+
+        jLabel10.setFont(new java.awt.Font("Liberation Sans", 0, 12)); // NOI18N
+        jLabel10.setText("*Deadline sebagai tanggal pertemuan");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +128,9 @@ public class addpertemuan extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(btnCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave))
@@ -157,7 +165,7 @@ public class addpertemuan extends javax.swing.JFrame {
                                     .addComponent(textLokasi, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(textMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 48, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -191,12 +199,13 @@ public class addpertemuan extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboPrioritas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addComponent(jLabel8)
-                .addGap(57, 57, 57)
+                .addGap(53, 53, 53)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnCancel))
+                    .addComponent(btnCancel)
+                    .addComponent(jLabel10))
                 .addContainerGap())
         );
 
@@ -239,7 +248,7 @@ public class addpertemuan extends javax.swing.JFrame {
         boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
 
         if (deskripsi.isEmpty() || matkul.isEmpty() || lokasi.isEmpty() || deadlineMentah.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Semua field termasuk tanggal wajib diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -248,8 +257,52 @@ public class addpertemuan extends javax.swing.JFrame {
             java.text.SimpleDateFormat formatAsal = new java.text.SimpleDateFormat("dd/MM/yyyy");
             tanggalObjek = formatAsal.parse(deadlineMentah);
         } catch (java.text.ParseException e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Format tanggal salah! Gunakan dd/MM/yyyy\nContoh: 01/06/2026", "Format Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Format tanggal salah! Gunakan dd/MM/yyyy", "Format Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
+        }
+        
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) mainForm.getTblPertemuan().getModel();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+
+        boolean adaBentrok = false;
+        String tanggalBentrok = "";
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            int idBaris = (int) mainForm.getTblPertemuan().getClientProperty("id_row_" + i);
+            if (this.idTarget != -1 && idBaris == this.idTarget) {
+                continue;
+            }
+
+            String tanggalTabel = model.getValueAt(i, 5).toString();
+            try {
+                java.util.Date tglBaris = sdf.parse(tanggalTabel);
+
+                com.agenda.model.pertemuan_kuliah temp = new com.agenda.model.pertemuan_kuliah();
+                temp.Deadline = tglBaris;
+
+                if (temp.cekBentrok(tanggalObjek)) {
+                    adaBentrok = true;
+                    tanggalBentrok = tanggalTabel;
+                    break;
+                }
+            } catch (Exception e) {
+            }
+        }
+        
+        if (adaBentrok) {
+            int pilihan = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "Peringatan: Anda sudah memiliki agenda lain pada tanggal " + tanggalBentrok + "!\n"
+                    + "Apakah Anda tetap ingin menjadwalkan pertemuan ini?",
+                    "Jadwal Bentrok Detected",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+
+            // Jika user menekan tombol 'No' (Batal) atau menutup dialog, batalkan proses penyimpanan
+            if (pilihan != javax.swing.JOptionPane.YES_OPTION) {
+                return;
+            }
         }
 
         com.agenda.model.pertemuan_kuliah p = new com.agenda.model.pertemuan_kuliah();
@@ -263,12 +316,11 @@ public class addpertemuan extends javax.swing.JFrame {
         boolean isEdit = (dataEdit != null);
         String username = mainForm.getCurrentUser();
 
-        // ✔️ SELESAI: Menggunakan akses direct .id karena variabelnya sudah diubah jadi public
-        int idData = isEdit ? dataEdit.id : -1;
-
-        // Eksekusi ke database model
-        if (p.simpanKeDatabase(isEdit, username, idData)) {
+        // Gunakan idTarget (dari GUI) bukan dataEdit.id (dari Model)
+        if (p.simpanKeDatabase(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Pertemuan berhasil dijadwalkan!" : "Pertemuan berhasil diperbarui!");
+
+            // Refresh tabel di menu utama
             mainForm.loadTabelPertemuan();
             this.dispose();
         } else {
@@ -300,7 +352,7 @@ public class addpertemuan extends javax.swing.JFrame {
         //</editor-fold>        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new addpertemuan().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new pertemuan().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -309,6 +361,7 @@ public class addpertemuan extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboPrioritas;
     private javax.swing.JComboBox<String> comboSesi;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

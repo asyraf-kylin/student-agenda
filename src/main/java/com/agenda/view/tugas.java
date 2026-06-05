@@ -8,41 +8,39 @@ package com.agenda.view;
  *
  * @author ajax
  */
-public class addtugas extends javax.swing.JFrame {
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(addtugas.class.getName());
+public class tugas extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(tugas.class.getName());
     private com.agenda.model.tugas_kuliah dataEdit = null;
     private menu mainForm;
-    /**
-     * Creates new form NewJFrame
-     */
-    public addtugas(menu mainForm, com.agenda.model.tugas_kuliah tugas) {
+    private int idTarget = -1;
+    
+    public tugas(menu mainForm, com.agenda.model.tugas_kuliah tugas, int idData) {
         initComponents();
         this.mainForm = mainForm;
         this.dataEdit = tugas;
+        this.idTarget = idData;
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        // PENGAMAN: Cek apakah objek tugas ada isinya (Mode Edit) atau null (Mode Tambah Baru)
         if (tugas != null) {
-            // Mode EDIT: Isi data ke form
-            textDeskripsi.setText(tugas.Deskripsi);
             textMatkul.setText(tugas.MataKuliah);
-            textBobot.setText(String.valueOf(tugas.Bobot));
             comboKesulitan.setSelectedItem(tugas.TingkatKesulitan);
-            comboPrioritas.setSelectedItem(tugas.Prioritas ? "Tinggi" : "Biasa");
+            textBobot.setText(String.valueOf(tugas.Bobot));
+            textDeskripsi.setText(tugas.Deskripsi); // Mewarisi properti agenda
             
-            btnSave.setText("Update"); // Ganti label tombol
-        } else {
-            // Mode TAMBAH BARU: Pastikan form kosong
-            textDeskripsi.setText("");
-            textMatkul.setText("");
-            textBobot.setText("");
-            btnSave.setText("Simpan"); // Kembalikan label tombol
+            if (tugas.Deadline != null) {
+                java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                textDeadline.setText(formatGUI.format(tugas.Deadline)); // Mewarisi properti agenda
+            }
+
+            comboPrioritas.setSelectedItem(tugas.Prioritas ? "Tinggi" : "Biasa"); // Mewarisi properti agenda
+            btnSave.setText("Update");
         }
     }
     
-    public addtugas() {
-        initComponents();
+    public tugas() {
+    initComponents();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,9 +67,10 @@ public class addtugas extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(400, 500));
         setResizable(false);
 
         btnSave.setText("Simpan");
@@ -96,7 +95,7 @@ public class addtugas extends javax.swing.JFrame {
 
         textBobot.addActionListener(this::textBobotActionPerformed);
 
-        comboKesulitan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ez", "Standart", "Hardcore" }));
+        comboKesulitan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mudah", "Sedang", "Sulit" }));
         comboKesulitan.addActionListener(this::comboKesulitanActionPerformed);
 
         jLabel2.setText("Deskripsi:");
@@ -113,26 +112,25 @@ public class addtugas extends javax.swing.JFrame {
 
         jLabel8.setText("Bobot:");
 
+        jLabel9.setText("Format Pengisian Deadline: 12/12/2026");
+
+        jLabel10.setText("*Bobot dapat dikosongkan");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCancel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel7)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)))
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel3))
                             .addComponent(jLabel8))
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +147,18 @@ public class addtugas extends javax.swing.JFrame {
                                 .addGap(63, 63, 63)
                                 .addComponent(jLabel5)
                                 .addGap(56, 56, 56)))
-                        .addGap(44, 44, 44)))
+                        .addGap(44, 44, 44))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 33, Short.MAX_VALUE)
+                                .addComponent(jLabel9))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCancel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSave)))
                 .addContainerGap())
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -184,10 +193,13 @@ public class addtugas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboPrioritas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(129, 129, 129)
+                .addGap(55, 55, 55)
+                .addComponent(jLabel9)
+                .addGap(56, 56, 56)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnCancel))
+                    .addComponent(btnCancel)
+                    .addComponent(jLabel10))
                 .addContainerGap())
         );
 
@@ -211,10 +223,6 @@ public class addtugas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_textMatkulActionPerformed
 
-    private void textBobotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBobotActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textBobotActionPerformed
-
     private void comboPrioritasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPrioritasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboPrioritasActionPerformed
@@ -225,10 +233,113 @@ public class addtugas extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
-        
-    // mainForm.loadDataKeTabel(); // Refresh tabel di menu utama
-        this.dispose();
+        String matkul = textMatkul.getText().trim();
+        String kesulitan = comboKesulitan.getSelectedItem().toString();
+        String bobotStr = textBobot.getText().trim();
+        String deskripsi = textDeskripsi.getText().trim();
+        String deadlineMentah = textDeadline.getText().trim();
+        boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
+
+        // 2. Validasi Kolom Kosong
+        if (matkul.isEmpty() || bobotStr.isEmpty() || deskripsi.isEmpty() || deadlineMentah.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3. Validasi Tipe Data Numerik pada Nilai Bobot Tugas
+        int bobot = 0;
+        try {
+            bobot = Integer.parseInt(bobotStr);
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Bobot harus berupa bilangan angka!", "Format Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. Parsing Input Tanggal Deadline (dd/MM/yyyy)
+        java.util.Date tanggalObjek = null;
+        try {
+            java.text.SimpleDateFormat formatAsal = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            tanggalObjek = formatAsal.parse(deadlineMentah);
+        } catch (java.text.ParseException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Format tanggal salah! Gunakan dd/MM/yyyy", "Format Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 5. Logika Cek Bentrok Tanggal Melalui JTable Utama (Mengikuti pola pertemuan.java)
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) mainForm.getTblTugas().getModel();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+
+        boolean adaBentrok = false;
+        String tanggalBentrok = "";
+
+        for (int i = 0; i < model.getRowCount(); i++) {
+            int idBaris = (int) mainForm.getTblTugas().getClientProperty("id_row_" + i);
+            if (this.idTarget != -1 && idBaris == this.idTarget) {
+                // Lewati baris ini jika sedang dalam mode pengeditan data baris yang bersangkutan
+                continue;
+            }
+
+            String tanggalTabel = model.getValueAt(i, 5).toString(); // Ambil string tanggal dari JTable kolom ke-5
+            try {
+                java.util.Date tglBaris = sdf.parse(tanggalTabel);
+
+                com.agenda.model.tugas_kuliah temp = new com.agenda.model.tugas_kuliah();
+                temp.Deadline = tglBaris;
+
+                // Memanfaatkan polimorfisme method cekBentrok dari superclass agenda
+                if (temp.cekBentrok(tanggalObjek)) {
+                    adaBentrok = true;
+                    tanggalBentrok = tanggalTabel;
+                    break;
+                }
+            } catch (Exception e) {
+                // Abaikan jika terjadi kegagalan pembacaan baris eksternal
+            }
+        }
+
+        // 6. Dialog Interupsi/Konfirmasi Bentrok Agenda
+        if (adaBentrok) {
+            int pilihan = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "Peringatan: Anda sudah memiliki agenda lain pada tanggal " + tanggalBentrok + "!\n"
+                    + "Apakah Anda tetap ingin menyimpan tugas kuliah ini?",
+                    "Jadwal Bentrok Detected",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+
+            if (pilihan != javax.swing.JOptionPane.YES_OPTION) {
+                return; // Batalkan proses jika user menolak
+            }
+        }
+
+        // 7. Mapping Data Inputan ke Objek Model Terpadu tugas_kuliah
+        com.agenda.model.tugas_kuliah t = new com.agenda.model.tugas_kuliah();
+        t.MataKuliah = matkul;
+        t.TingkatKesulitan = kesulitan;
+        t.Bobot = bobot;
+        t.Deskripsi = deskripsi;
+        t.Deadline = tanggalObjek;
+        t.Prioritas = prioritas;
+
+        boolean isEdit = (dataEdit != null);
+        String username = mainForm.getCurrentUser();
+
+        // 8. Eksekusi Query Dinamis Melalui Metode Model Berpola pertemuan_kuliah
+        if (t.simpanKeDatabase(isEdit, username, this.idTarget)) {
+            javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Tugas berhasil disimpan!" : "Tugas berhasil diperbarui!");
+
+            // Refresh tabel komponen JTable tugas utama di menu
+            mainForm.loadTabelTugas();
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Gagal memproses data tugas ke database.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void textBobotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textBobotActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textBobotActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,7 +361,9 @@ public class addtugas extends javax.swing.JFrame {
         //</editor-fold>        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new addtugas(null, null).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+        new tugas().setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -259,6 +372,7 @@ public class addtugas extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboKesulitan;
     private javax.swing.JComboBox<String> comboPrioritas;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -266,6 +380,7 @@ public class addtugas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField textBobot;
     private javax.swing.JTextField textDeadline;
     private javax.swing.JTextField textDeskripsi;
