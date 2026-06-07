@@ -18,41 +18,55 @@ public class belajar_mandiri extends agenda {
     public String Materi;
     public int Durasi;
 
-    public boolean simpanKeDatabase(String username) {
-        String sql = "INSERT INTO tabel_belajar (MataKuliah, Materi, Deskripsi, Deadline, Durasi, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = koneksi.getKoneksi();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
+    // Metode utama untuk Insert dan Update dari Form GUI
+    public boolean tambahBelajar(boolean isEdit, String username, int idData) {
+        String sql;
+        if (!isEdit) {
+            sql = "INSERT INTO tabel_belajar (MataKuliah, Materi, Durasi, Deskripsi, Deadline, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        } else {
+            sql = "UPDATE tabel_belajar SET MataKuliah = ?, Materi = ?, Durasi = ?, Deskripsi = ?, Deadline = ?, Prioritas = ? WHERE id = ?";
+        }
+
+        try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+
             pst.setString(1, this.MataKuliah);
             pst.setString(2, this.Materi);
-            pst.setString(3, this.Deskripsi);
-            pst.setTimestamp(4, this.Deadline != null ? new java.sql.Timestamp(this.Deadline.getTime()) : null);
-            pst.setInt(5, this.Durasi);
+            pst.setInt(3, this.Durasi);
+            pst.setString(4, this.Deskripsi);
+
+            // Penanganan Deadline (Konsisten dengan model lain)
+            if (this.Deadline != null) {
+                pst.setDate(5, new java.sql.Date(this.Deadline.getTime()));
+            } else {
+                pst.setNull(5, java.sql.Types.DATE);
+            }
+
             pst.setBoolean(6, this.Prioritas);
-            pst.setBoolean(7, this.StatusSelesai);
-            pst.setString(8, username);
+
+            if (!isEdit) {
+                pst.setBoolean(7, false); // Default StatusSelesai
+                pst.setString(8, username);
+            } else {
+                pst.setInt(7, idData); // Parameter WHERE id = ?
+            }
+
             return pst.executeUpdate() > 0;
-        } catch (SQLException e) {
+        } catch (java.sql.SQLException e) {
             System.err.println("Error Simpan Belajar: " + e.getMessage());
             return false;
         }
     }
 
-    public boolean updateDiDatabase() {
-        String sql = "UPDATE tabel_belajar SET MataKuliah=?, Materi=?, Deskripsi=?, Deadline=?, Durasi=?, Prioritas=?, StatusSelesai=? WHERE id=?";
-        try (Connection conn = koneksi.getKoneksi();
-             PreparedStatement pst = conn.prepareStatement(sql)) {
-            pst.setString(1, this.MataKuliah);
-            pst.setString(2, this.Materi);
-            pst.setString(3, this.Deskripsi);
-            pst.setTimestamp(4, this.Deadline != null ? new java.sql.Timestamp(this.Deadline.getTime()) : null);
-            pst.setInt(5, this.Durasi);
-            pst.setBoolean(6, this.Prioritas);
-            pst.setBoolean(7, this.StatusSelesai);
-            pst.setInt(8, this.id);
-            return pst.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error Update Belajar: " + e.getMessage());
-            return false;
+    // Wajib ada karena menginduk ke kelas abstrak "agenda"
+    @Override
+    public void tandaiSelesai(int idData) {
+        this.StatusSelesai = true;
+        String sql = "UPDATE tabel_belajar SET StatusSelesai = true WHERE id = ?";
+        try (Connection conn = koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, idData);
+            pst.executeUpdate();
+        } catch (SQLException e) { 
+            System.err.println("Error Tandai Selesai Belajar: " + e.getMessage()); 
         }
     }
 }

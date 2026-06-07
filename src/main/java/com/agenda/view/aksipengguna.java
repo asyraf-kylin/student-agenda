@@ -150,6 +150,16 @@ public class aksipengguna extends javax.swing.JFrame {
             new tugas(mainForm, t, this.idDataTerpilih).setVisible(true);
             this.dispose();
 
+        } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) {
+            com.agenda.model.belajar_mandiri b = (com.agenda.model.belajar_mandiri) agendaDipilih;
+            new belajar(mainForm, b, this.idDataTerpilih).setVisible(true);
+            this.dispose();
+
+        } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {
+            com.agenda.model.kegiatan_ukm k = (com.agenda.model.kegiatan_ukm) agendaDipilih;
+            new kegiatan(mainForm, k, this.idDataTerpilih).setVisible(true);
+            this.dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "Tipe agenda tidak dikenal.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -158,37 +168,54 @@ public class aksipengguna extends javax.swing.JFrame {
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
         if (idDataTerpilih == -1) {
-            return;
+        return;
+    }
+
+    int konfirmasi = JOptionPane.showConfirmDialog(this,
+            "Apakah Anda yakin ingin menghapus jadwal ini?",
+            "Konfirmasi Hapus Data",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+
+    if (konfirmasi == JOptionPane.YES_OPTION) {
+
+        // Menentukan nama tabel berdasarkan instance objek
+        String namaTabel = "";
+        if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
+            namaTabel = "tabel_tugas";
+        } else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+            namaTabel = "tabel_pertemuan";
+        } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) { // <-- TAMBAHAN
+            namaTabel = "tabel_belajar";
+        } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {    // <-- TAMBAHAN
+            namaTabel = "tabel_kegiatan";
         }
 
-        int konfirmasi = JOptionPane.showConfirmDialog(this,
-                "Apakah Anda yakin ingin menghapus jadwal ini?",
-                "Konfirmasi Hapus Data",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        String sql = "DELETE FROM " + namaTabel + " WHERE id = ?";
 
-        if (konfirmasi == JOptionPane.YES_OPTION) {
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
 
-            String namaTabel = (agendaDipilih instanceof com.agenda.model.tugas_kuliah) ? "tabel_tugas" : "tabel_pertemuan";
-            String sql = "DELETE FROM " + namaTabel + " WHERE id = ?";
+            pst.setInt(1, idDataTerpilih);
 
-            try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+            if (pst.executeUpdate() > 0) {
+                JOptionPane.showMessageDialog(this, "Jadwal berhasil dihapus.");
 
-                pst.setInt(1, idDataTerpilih);
-
-                if (pst.executeUpdate() > 0) {
-                    JOptionPane.showMessageDialog(this, "Jadwal berhasil dihapus.");
-
-                    if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
-                        mainForm.loadTabelTugas();
-                    } else {
-                        mainForm.loadTabelPertemuan();
-                    }
-                    this.dispose();
+                // Reload data JTable di menu utama sesuai tipenya
+                if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
+                    mainForm.loadTabelTugas();
+                } else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+                    mainForm.loadTabelPertemuan();
+                } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) {
+                    mainForm.loadTabelBelajar();
+                } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {
+                    mainForm.loadTabelKegiatan();
                 }
-            } catch (SQLException e) {
-                System.err.println("Error Hapus Agenda: " + e.getMessage());
-                JOptionPane.showMessageDialog(this, "Gagal menghapus data.", "Error", JOptionPane.ERROR_MESSAGE);
+                
+                this.dispose();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error Hapus Agenda: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Gagal menghapus data.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -207,34 +234,50 @@ public class aksipengguna extends javax.swing.JFrame {
     private void btnSimpanStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanStatusActionPerformed
         // TODO add your handling code here:
         if (idDataTerpilih == -1) {
-            return;
-        }
+        return;
+    }
 
-        boolean statusBaru = jCheckBox1.isSelected();
+    boolean statusBaru = jCheckBox1.isSelected();
 
-        String namaTabel = (agendaDipilih instanceof com.agenda.model.tugas_kuliah) ? "tabel_tugas" : "tabel_pertemuan";
-        String sql = "UPDATE " + namaTabel + " SET StatusSelesai = ? WHERE id = ?";
+    // Menentukan nama tabel berdasarkan instance objek
+    String namaTabel = "";
+    if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
+        namaTabel = "tabel_tugas";
+    } else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+        namaTabel = "tabel_pertemuan";
+    } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) { // <-- TAMBAHAN
+        namaTabel = "tabel_belajar";
+    } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {    // <-- TAMBAHAN
+        namaTabel = "tabel_kegiatan";
+    }
 
-        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+    String sql = "UPDATE " + namaTabel + " SET StatusSelesai = ? WHERE id = ?";
 
-            pst.setBoolean(1, statusBaru);
-            pst.setInt(2, idDataTerpilih);
+    try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
 
-            if (pst.executeUpdate() > 0) {
-                JOptionPane.showMessageDialog(this, "Status berhasil diperbarui!");
+        pst.setBoolean(1, statusBaru);
+        pst.setInt(2, idDataTerpilih);
 
-                if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
-                    mainForm.loadTabelTugas();
-                } else {
-                    mainForm.loadTabelPertemuan();
-                }
-                this.dispose();
+        if (pst.executeUpdate() > 0) {
+            JOptionPane.showMessageDialog(this, "Status berhasil diperbarui!");
+
+            // Refresh tampilan JTable menu utama
+            if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
+                mainForm.loadTabelTugas();
+            } else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
+                mainForm.loadTabelPertemuan();
+            } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) { // <-- TAMBAHAN
+                mainForm.loadTabelBelajar();
+            } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {    // <-- TAMBAHAN
+                mainForm.loadTabelKegiatan();
+            }
+            
+            this.dispose();
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal mengubah status.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(this, "Gagal mengubah status.", "Error", JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_btnSimpanStatusActionPerformed
-
+    }
     /**
      * @param args the command line arguments
      */

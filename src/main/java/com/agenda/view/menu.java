@@ -4,6 +4,10 @@
  */
 package com.agenda.view;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +32,8 @@ public class menu extends javax.swing.JFrame {
     
     loadTabelPertemuan();
     loadTabelTugas();
+    loadTabelKegiatan();
+    loadTabelBelajar();
     
         tblPertemuan.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
             @Override
@@ -130,12 +136,74 @@ public class menu extends javax.swing.JFrame {
         lblTugasSelesai.setText(String.valueOf(selesai));
     }
     
+    public void updateStatistikKegiatan() {
+        DefaultTableModel model = (DefaultTableModel) tblKegiatan.getModel();
+        int total = model.getRowCount();
+        int selesai = 0;
+        int belumSelesai = 0;
+
+        // Asumsi kolom status ada di index ke-6
+        int kolomStatusIdx = 6;
+
+        for (int i = 0; i < total; i++) {
+            Object value = model.getValueAt(i, kolomStatusIdx);
+
+            if (value instanceof Boolean) {
+                if ((Boolean) value) {
+                    selesai++;
+                } else {
+                    belumSelesai++;
+                }
+            }
+        }
+
+        // Ganti nama label sesuai dengan yang ada di desain Form Anda
+        totKegiatan.setText(String.valueOf(total));
+        lblKegiatanBelum.setText(String.valueOf(belumSelesai));
+        lblKegiatanSelesai.setText(String.valueOf(selesai));
+    }
+    
+    public void updateStatistikBelajar() {
+        DefaultTableModel model = (DefaultTableModel) tblBelajar.getModel();
+        int total = model.getRowCount();
+        int selesai = 0;
+        int belumSelesai = 0;
+
+        // Asumsi kolom status ada di index ke-6
+        int kolomStatusIdx = 6;
+
+        for (int i = 0; i < total; i++) {
+            Object value = model.getValueAt(i, kolomStatusIdx);
+
+            if (value instanceof Boolean) {
+                if ((Boolean) value) {
+                    selesai++;
+                } else {
+                    belumSelesai++;
+                }
+            }
+        }
+
+        // Ganti nama label sesuai dengan yang ada di desain Form Anda
+        totBelajar.setText(String.valueOf(total));
+        lblBelajarBelum.setText(String.valueOf(belumSelesai));
+        lblBelajarSelesai.setText(String.valueOf(selesai));
+    }
+    
     public javax.swing.JTable getTblTugas() {
     return tblTugas;
     }
     
     public javax.swing.JTable getTblPertemuan() {
     return this.tblPertemuan;
+    }
+    
+    public javax.swing.JTable getkKegiatan() {
+        return tblKegiatan;
+    }
+
+    public javax.swing.JTable getTblBelajar() {
+        return this.tblBelajar;
     }
     
     public void loadTabelTugas() {
@@ -293,6 +361,116 @@ public class menu extends javax.swing.JFrame {
         }
     }
     
+    public void loadTabelKegiatan() {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Kegiatan", "Lokasi", "Anggota", "Deskripsi", "Deadline", "Prioritas", "Status"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                // Kolom 5 (Prioritas) dan 6 (Status) menjadi Checkbox
+                if (columnIndex == 5 || columnIndex == 6) {
+                    return Boolean.class;
+                }
+                return String.class;
+            }
+        };
+
+        tblKegiatan.setModel(model);
+        model.setRowCount(0);
+
+        String sql = "SELECT id, NamaKegiatan, Lokasi, Anggota, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_kegiatan WHERE username = ?";
+
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    // Asumsi database menyimpan 1/0 atau boolean
+                    boolean prioritas = rs.getBoolean("Prioritas");
+                    boolean status = rs.getBoolean("StatusSelesai");
+                    java.sql.Timestamp deadlineTs = rs.getTimestamp("Deadline");
+                    String tanggalTerformat = (deadlineTs != null)
+                            ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(deadlineTs.getTime()))
+                            : "-";
+
+                    model.addRow(new Object[]{
+                        rs.getString("NamaKegiatan"),
+                        rs.getString("Lokasi"),
+                        rs.getString("Anggota"),
+                        rs.getString("Deskripsi"),
+                        tanggalTerformat,
+                        prioritas,
+                        status
+                    });
+
+                    int rowCount = model.getRowCount() - 1;
+                    tblKegiatan.putClientProperty("id_row_" + rowCount, rs.getInt("id"));
+                }
+                updateStatistikKegiatan();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error load tabel kegiatan: " + e.getMessage());
+        }
+    }
+    
+    public void loadTabelBelajar() {
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Mata Kuliah", "Materi", "Durasi", "Deskripsi", "Deadline", "Prioritas", "Status"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 5 || columnIndex == 6) {
+                    return Boolean.class;
+                }
+                return String.class;
+            }
+        };
+
+        tblBelajar.setModel(model);
+        model.setRowCount(0);
+
+        String sql = "SELECT id, MataKuliah, Materi, Durasi, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_belajar WHERE username = ?";
+
+        try (Connection conn = com.agenda.util.koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, currentUser);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    boolean prioritas = rs.getBoolean("Prioritas");
+                    boolean status = rs.getBoolean("StatusSelesai");
+
+                    model.addRow(new Object[]{
+                        rs.getString("MataKuliah"),
+                        rs.getString("Materi"),
+                        rs.getInt("Durasi") + " Menit",
+                        rs.getString("Deskripsi"),
+                        (rs.getTimestamp("Deadline") != null)
+                        ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(rs.getTimestamp("Deadline").getTime()))
+                        : "-",
+                        prioritas,
+                        status
+                    });
+
+                    int rowCount = model.getRowCount() - 1;
+                    tblBelajar.putClientProperty("id_row_" + rowCount, rs.getInt("id"));
+                }
+                updateStatistikBelajar();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error load tabel belajar: " + e.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -337,13 +515,13 @@ public class menu extends javax.swing.JFrame {
         jPanel14 = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jLabelSselesai2 = new javax.swing.JLabel();
+        lblKegiatanSelesai = new javax.swing.JLabel();
         jPanel16 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        jLabelBSelesai2 = new javax.swing.JLabel();
+        lblKegiatanBelum = new javax.swing.JLabel();
         jPanel17 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jLabelToTugas2 = new javax.swing.JLabel();
+        totKegiatan = new javax.swing.JLabel();
         TambahKegiatan = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblKegiatan = new javax.swing.JTable();
@@ -354,13 +532,13 @@ public class menu extends javax.swing.JFrame {
         jPanel10 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabelSselesai1 = new javax.swing.JLabel();
+        lblBelajarSelesai = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jLabelBSelesai1 = new javax.swing.JLabel();
+        lblBelajarBelum = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jLabelToTugas1 = new javax.swing.JLabel();
+        totBelajar = new javax.swing.JLabel();
         labeltime = new javax.swing.JLabel();
         labelwelcome = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
@@ -672,7 +850,7 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Tanggal (Deadline)", "Prioritas", "Status"
+                "Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Deadline (Tanggal)", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
@@ -735,8 +913,8 @@ public class menu extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel7.setText("Sudah Selesai:");
 
-        jLabelSselesai2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelSselesai2.setText("0");
+        lblKegiatanSelesai.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblKegiatanSelesai.setText("0");
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -748,7 +926,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
                 .addContainerGap(72, Short.MAX_VALUE)
-                .addComponent(jLabelSselesai2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblKegiatanSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
         jPanel15Layout.setVerticalGroup(
@@ -757,15 +935,15 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelSselesai2)
+                .addComponent(lblKegiatanSelesai)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jLabel8.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel8.setText("Belum Selesai:");
 
-        jLabelBSelesai2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelBSelesai2.setText("0");
+        lblKegiatanBelum.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblKegiatanBelum.setText("0");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -778,7 +956,7 @@ public class menu extends javax.swing.JFrame {
                         .addComponent(jLabel8))
                     .addGroup(jPanel16Layout.createSequentialGroup()
                         .addGap(63, 63, 63)
-                        .addComponent(jLabelBSelesai2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblKegiatanBelum, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
@@ -787,15 +965,15 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel8)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelBSelesai2)
+                .addComponent(lblKegiatanBelum)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jLabel9.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel9.setText("Total Kegiatan:");
 
-        jLabelToTugas2.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelToTugas2.setText("0");
+        totKegiatan.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        totKegiatan.setText("0");
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -807,7 +985,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel17Layout.createSequentialGroup()
                 .addContainerGap(64, Short.MAX_VALUE)
-                .addComponent(jLabelToTugas2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(totKegiatan, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57))
         );
         jPanel17Layout.setVerticalGroup(
@@ -816,7 +994,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel9)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelToTugas2)
+                .addComponent(totKegiatan)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
@@ -852,14 +1030,14 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Kegiatan", "Lokasi", "Anggota", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
+                "Kegiatan", "Lokasi", "Anggota", "Deskripsi", "Deadline (Tanggal)", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -907,14 +1085,14 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Materi", "Durasi", "Deskripsi", "Tanggal", "Jam", "Deadline", "Prioritas", "Status"
+                "Mata Kuliah", "Materi", "Durasi", "Deskripsi", "Deadline (Tanggal)", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -937,8 +1115,8 @@ public class menu extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel4.setText("Sudah Selesai:");
 
-        jLabelSselesai1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelSselesai1.setText("0");
+        lblBelajarSelesai.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblBelajarSelesai.setText("0");
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -950,7 +1128,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                 .addContainerGap(72, Short.MAX_VALUE)
-                .addComponent(jLabelSselesai1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblBelajarSelesai, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
         jPanel11Layout.setVerticalGroup(
@@ -959,15 +1137,15 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelSselesai1)
+                .addComponent(lblBelajarSelesai)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel5.setText("Belum Selesai:");
 
-        jLabelBSelesai1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelBSelesai1.setText("0");
+        lblBelajarBelum.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblBelajarBelum.setText("0");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -980,7 +1158,7 @@ public class menu extends javax.swing.JFrame {
                         .addComponent(jLabel5))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(63, 63, 63)
-                        .addComponent(jLabelBSelesai1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblBelajarBelum, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
@@ -989,15 +1167,15 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelBSelesai1)
+                .addComponent(lblBelajarBelum)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel6.setText("Total Pembelajaran:");
 
-        jLabelToTugas1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabelToTugas1.setText("0");
+        totBelajar.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        totBelajar.setText("0");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -1009,7 +1187,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                 .addContainerGap(64, Short.MAX_VALUE)
-                .addComponent(jLabelToTugas1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(totBelajar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57))
         );
         jPanel13Layout.setVerticalGroup(
@@ -1018,7 +1196,7 @@ public class menu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addGap(26, 26, 26)
-                .addComponent(jLabelToTugas1)
+                .addComponent(totBelajar)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
@@ -1116,11 +1294,11 @@ public class menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void TambahPembelajaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPembelajaranActionPerformed
-        
+        new belajar(this, null, -1).setVisible(true);
     }//GEN-LAST:event_TambahPembelajaranActionPerformed
 
     private void TambahKegiatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahKegiatanActionPerformed
-        
+        new kegiatan(this, null, -1).setVisible(true);
     }//GEN-LAST:event_TambahKegiatanActionPerformed
 
     private void TambahPertemuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahPertemuanActionPerformed
@@ -1229,10 +1407,94 @@ public class menu extends javax.swing.JFrame {
 
     private void tblKegiatanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKegiatanMouseClicked
         // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            int row = tblKegiatan.getSelectedRow();
+            if (row == -1) {
+                return;
+            }
+
+            Object idProp = tblKegiatan.getClientProperty("id_row_" + row);
+            if (idProp == null) {
+                return;
+            }
+            int idTerpilih = (int) idProp;
+
+            com.agenda.model.kegiatan_ukm kegiatan = null;
+            String sql = "SELECT * FROM tabel_kegiatan WHERE id = ? AND username = ?";
+
+            try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+
+                pst.setInt(1, idTerpilih);
+                pst.setString(2, currentUser);
+
+                try (java.sql.ResultSet rs = pst.executeQuery()) {
+                    if (rs.next()) {
+                        kegiatan = new com.agenda.model.kegiatan_ukm();
+                        kegiatan.NamaKegiatan = rs.getString("NamaKegiatan");
+                        kegiatan.Deskripsi = rs.getString("Deskripsi");
+                        kegiatan.Deadline = rs.getTimestamp("Deadline");
+                        kegiatan.Lokasi = rs.getString("Lokasi");
+
+                        // Konversi string anggota di database kembali ke array
+                        String anggotaStr = rs.getString("Anggota");
+                        kegiatan.Anggota = (anggotaStr != null && !anggotaStr.isEmpty()) ? anggotaStr.split(", ") : new String[0];
+
+                        kegiatan.Prioritas = rs.getBoolean("Prioritas");
+                        kegiatan.StatusSelesai = rs.getBoolean("StatusSelesai");
+                    }
+                }
+            } catch (java.sql.SQLException e) {
+                System.err.println("Error Ambil Detail Kegiatan: " + e.getMessage());
+            }
+
+            if (kegiatan != null) {
+                new com.agenda.view.aksipengguna(this, kegiatan, idTerpilih).setVisible(true);
+            }
+        }
     }//GEN-LAST:event_tblKegiatanMouseClicked
 
     private void tblBelajarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBelajarMouseClicked
         // TODO add your handling code here:
+        if (evt.getClickCount() == 2) {
+            int row = tblBelajar.getSelectedRow();
+            if (row == -1) {
+                return;
+            }
+
+            Object idProp = tblBelajar.getClientProperty("id_row_" + row);
+            if (idProp == null) {
+                return;
+            }
+            int idTerpilih = (int) idProp;
+
+            com.agenda.model.belajar_mandiri belajar = null;
+            String sql = "SELECT * FROM tabel_belajar WHERE id = ? AND username = ?";
+
+            try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
+
+                pst.setInt(1, idTerpilih);
+                pst.setString(2, currentUser);
+
+                try (java.sql.ResultSet rs = pst.executeQuery()) {
+                    if (rs.next()) {
+                        belajar = new com.agenda.model.belajar_mandiri();
+                        belajar.MataKuliah = rs.getString("MataKuliah");
+                        belajar.Materi = rs.getString("Materi");
+                        belajar.Durasi = rs.getInt("Durasi");
+                        belajar.Deskripsi = rs.getString("Deskripsi");
+                        belajar.Deadline = rs.getTimestamp("Deadline");
+                        belajar.Prioritas = rs.getBoolean("Prioritas");
+                        belajar.StatusSelesai = rs.getBoolean("StatusSelesai");
+                    }
+                }
+            } catch (java.sql.SQLException e) {
+                System.err.println("Error Ambil Detail Belajar: " + e.getMessage());
+            }
+
+            if (belajar != null) {
+                new com.agenda.view.aksipengguna(this, belajar, idTerpilih).setVisible(true);
+            }
+        }
     }//GEN-LAST:event_tblBelajarMouseClicked
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -1314,12 +1576,6 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabelBSelesai1;
-    private javax.swing.JLabel jLabelBSelesai2;
-    private javax.swing.JLabel jLabelSselesai1;
-    private javax.swing.JLabel jLabelSselesai2;
-    private javax.swing.JLabel jLabelToTugas1;
-    private javax.swing.JLabel jLabelToTugas2;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
@@ -1349,6 +1605,10 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labeltime;
     private javax.swing.JLabel labelwelcome;
+    private javax.swing.JLabel lblBelajarBelum;
+    private javax.swing.JLabel lblBelajarSelesai;
+    private javax.swing.JLabel lblKegiatanBelum;
+    private javax.swing.JLabel lblKegiatanSelesai;
     private javax.swing.JLabel lblPertemuanBelum;
     private javax.swing.JLabel lblPertemuanSelesai;
     private javax.swing.JLabel lblTugasBelum;
@@ -1357,6 +1617,8 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JTable tblKegiatan;
     private javax.swing.JTable tblPertemuan;
     private javax.swing.JTable tblTugas;
+    private javax.swing.JLabel totBelajar;
+    private javax.swing.JLabel totKegiatan;
     private javax.swing.JLabel totPertemuan;
     private javax.swing.JLabel totTugas;
     // End of variables declaration//GEN-END:variables
