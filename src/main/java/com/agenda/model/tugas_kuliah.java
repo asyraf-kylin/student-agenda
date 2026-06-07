@@ -31,7 +31,6 @@ public class tugas_kuliah extends agenda {
         }
     }
 
-    // Method kalkulasi internal sesuai spesifikasi UML
     public int estimasiWaktu() {
         // 1. Cek pertama kali: jika sudah selesai, langsung kembalikan 0
         if (this.StatusSelesai) {
@@ -62,8 +61,7 @@ public class tugas_kuliah extends agenda {
         }
     }
 
-    // Menggabungkan Insert & Update dalam satu method dinamis
-    public boolean simpanKeDatabase(boolean isEdit, String username, int idData) {
+    public boolean tambahTugas(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
             // Sesuai dengan kolom di phpMyAdmin Anda

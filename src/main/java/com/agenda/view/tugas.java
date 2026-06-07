@@ -27,7 +27,7 @@ public class tugas extends javax.swing.JFrame {
             textMatkul.setText(tugas.MataKuliah);
             comboKesulitan.setSelectedItem(tugas.TingkatKesulitan);
             textBobot.setText(String.valueOf(tugas.Bobot));
-            textDeskripsi.setText(tugas.Deskripsi); // Mewarisi properti agenda
+            textDeskripsi.setText(tugas.Deskripsi);
             
             if (tugas.Deadline != null) {
                 java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
@@ -41,6 +41,8 @@ public class tugas extends javax.swing.JFrame {
     
     public tugas() {
     initComponents();
+    this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
+    
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -325,11 +327,8 @@ public class tugas extends javax.swing.JFrame {
         boolean isEdit = (dataEdit != null);
         String username = mainForm.getCurrentUser();
 
-        // 8. Eksekusi Query Dinamis Melalui Metode Model Berpola pertemuan_kuliah
-        if (t.simpanKeDatabase(isEdit, username, this.idTarget)) {
+        if (t.tambahTugas(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Tugas berhasil disimpan!" : "Tugas berhasil diperbarui!");
-
-            // Refresh tabel komponen JTable tugas utama di menu
             mainForm.loadTabelTugas();
             this.dispose();
         } else {

@@ -43,6 +43,7 @@ public class pertemuan extends javax.swing.JFrame {
      */
     public pertemuan() {
         initComponents();
+        this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
     }
 
     /**
@@ -317,7 +318,7 @@ public class pertemuan extends javax.swing.JFrame {
         String username = mainForm.getCurrentUser();
 
         // Gunakan idTarget (dari GUI) bukan dataEdit.id (dari Model)
-        if (p.simpanKeDatabase(isEdit, username, this.idTarget)) {
+        if (p.tambahPertemuan(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Pertemuan berhasil dijadwalkan!" : "Pertemuan berhasil diperbarui!");
 
             // Refresh tabel di menu utama

@@ -21,6 +21,7 @@ public class login extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         setAppIcon();
+        this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
     }
     
     private void setAppIcon() {

@@ -29,7 +29,7 @@ public class pertemuan_kuliah extends agenda {
         } catch (SQLException e) { System.err.println(e.getMessage()); }
     }
 
-    public boolean simpanKeDatabase(boolean isEdit, String username, int idData) {
+    public boolean tambahPertemuan(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
             sql = "INSERT INTO tabel_pertemuan (MataKuliah, Deskripsi, Lokasi, Sesi, Deadline, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

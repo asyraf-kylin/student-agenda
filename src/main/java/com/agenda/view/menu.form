@@ -27,6 +27,8 @@
               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               <Component id="labelwelcome" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnExport" min="-2" pref="87" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Component id="labeltime" min="-2" max="-2" attributes="0"/>
@@ -47,6 +49,7 @@
                   <Component id="labeltime" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="labelwelcome" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnLogout" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnExport" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
               <Component id="jTabbedPane1" max="32767" attributes="0"/>
@@ -636,8 +639,8 @@
                             <Column editable="false" title="Lokasi" type="java.lang.String"/>
                             <Column editable="false" title="Deskripsi" type="java.lang.String"/>
                             <Column editable="false" title="Sesi" type="java.lang.String"/>
-                            <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
                             <Column editable="false" title="Tanggal (Deadline)" type="java.lang.String"/>
+                            <Column editable="false" title="Prioritas" type="java.lang.Boolean"/>
                             <Column editable="false" title="Status" type="java.lang.Boolean"/>
                           </Table>
                         </Property>
@@ -1334,6 +1337,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnExport">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Export"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

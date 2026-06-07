@@ -24,6 +24,7 @@ public class menu extends javax.swing.JFrame {
     setAppIcon();
     labelwelcome.setText("Selamat datang di AgendaKu, " + namaUser + " 👋");
     tampilkanWaktu();
+    this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
     
     loadTabelPertemuan();
     loadTabelTugas();
@@ -241,7 +242,7 @@ public class menu extends javax.swing.JFrame {
     public void loadTabelPertemuan() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Prioritas", "Tanggal (Deadline)", "Status"}
+                new String[]{"Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Tanggal (Deadline)","Prioritas", "Status"}
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -250,8 +251,8 @@ public class menu extends javax.swing.JFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                // Kolom Prioritas adalah indeks 4, Kolom Status adalah indeks 6
-                if (columnIndex == 4 || columnIndex == 6) {
+                // Kolom Prioritas adalah indeks 5, Kolom Status adalah indeks 6
+                if (columnIndex == 5 || columnIndex == 6) {
                     return Boolean.class;
                 }
                 return String.class;
@@ -289,9 +290,9 @@ public class menu extends javax.swing.JFrame {
                         lokasi, // 1
                         deskripsi, // 2
                         sesi, // 3
-                        prioritas, // 4 (Boolean)
-                        tanggalTerformat, // 5
-                        statusSelesai // 6 (Boolean)
+                        tanggalTerformat, // 4
+                        prioritas, // 5 
+                        statusSelesai // 6 
                     });
 
                     // Taktik GUI: Simpan ID di properti baris
@@ -377,6 +378,7 @@ public class menu extends javax.swing.JFrame {
         labeltime = new javax.swing.JLabel();
         labelwelcome = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
+        btnExport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -684,11 +686,11 @@ public class menu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Prioritas", "Tanggal (Deadline)", "Status"
+                "Mata Kuliah", "Lokasi", "Deskripsi", "Sesi", "Tanggal (Deadline)", "Prioritas", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -1089,6 +1091,9 @@ public class menu extends javax.swing.JFrame {
         btnLogout.setText("Logout");
         btnLogout.addActionListener(this::btnLogoutActionPerformed);
 
+        btnExport.setText("Export");
+        btnExport.addActionListener(this::btnExportActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1097,6 +1102,8 @@ public class menu extends javax.swing.JFrame {
                 .addGap(22, 22, 22)
                 .addComponent(labelwelcome)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogout)
                 .addGap(34, 34, 34)
                 .addComponent(labeltime)
@@ -1113,7 +1120,8 @@ public class menu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labeltime)
                     .addComponent(labelwelcome)
-                    .addComponent(btnLogout))
+                    .addComponent(btnLogout)
+                    .addComponent(btnExport))
                 .addGap(14, 14, 14)
                 .addComponent(jTabbedPane1))
         );
@@ -1266,6 +1274,14 @@ public class menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLogoutActionPerformed
 
+    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+        // TODO add your handling code here:
+        com.agenda.model.mahasiswa.modeEkspor = jTabbedPane1.getSelectedIndex();
+        com.agenda.model.mahasiswa mhs = new com.agenda.model.mahasiswa();
+        mhs.Nama = currentUser;
+        mhs.simpanCSV();
+    }//GEN-LAST:event_btnExportActionPerformed
+
     
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {                                         
     // Menutup jendela JDialog
@@ -1305,6 +1321,7 @@ public class menu extends javax.swing.JFrame {
     private javax.swing.JButton TambahPembelajaran;
     private javax.swing.JButton TambahPertemuan;
     private javax.swing.JButton TambahTugas;
+    private javax.swing.JButton btnExport;
     private javax.swing.JButton btnLogout;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

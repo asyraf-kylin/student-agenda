@@ -39,6 +39,7 @@ public class aksipengguna extends javax.swing.JFrame {
      */
     public aksipengguna() {
         initComponents();
+        this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
     }
 
     /**
