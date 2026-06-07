@@ -31,10 +31,10 @@ public class tugas extends javax.swing.JFrame {
             
             if (tugas.Deadline != null) {
                 java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                textDeadline.setText(formatGUI.format(tugas.Deadline)); // Mewarisi properti agenda
+                textDeadline.setText(formatGUI.format(tugas.Deadline));
             }
 
-            comboPrioritas.setSelectedItem(tugas.Prioritas ? "Tinggi" : "Biasa"); // Mewarisi properti agenda
+            comboPrioritas.setSelectedItem(tugas.Prioritas ? "Tinggi" : "Biasa");
             btnSave.setText("Update");
         }
     }
@@ -242,13 +242,11 @@ public class tugas extends javax.swing.JFrame {
         String deadlineMentah = textDeadline.getText().trim();
         boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
 
-        // 2. Validasi Kolom Kosong
         if (matkul.isEmpty() || bobotStr.isEmpty() || deskripsi.isEmpty() || deadlineMentah.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Semua field wajib diisi!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 3. Validasi Tipe Data Numerik pada Nilai Bobot Tugas
         int bobot = 0;
         try {
             bobot = Integer.parseInt(bobotStr);
@@ -257,7 +255,6 @@ public class tugas extends javax.swing.JFrame {
             return;
         }
 
-        // 4. Parsing Input Tanggal Deadline (dd/MM/yyyy)
         java.util.Date tanggalObjek = null;
         try {
             java.text.SimpleDateFormat formatAsal = new java.text.SimpleDateFormat("dd/MM/yyyy");
@@ -267,7 +264,6 @@ public class tugas extends javax.swing.JFrame {
             return;
         }
 
-        // 5. Logika Cek Bentrok Tanggal Melalui JTable Utama (Mengikuti pola pertemuan.java)
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) mainForm.getTblTugas().getModel();
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
 
@@ -277,29 +273,26 @@ public class tugas extends javax.swing.JFrame {
         for (int i = 0; i < model.getRowCount(); i++) {
             int idBaris = (int) mainForm.getTblTugas().getClientProperty("id_row_" + i);
             if (this.idTarget != -1 && idBaris == this.idTarget) {
-                // Lewati baris ini jika sedang dalam mode pengeditan data baris yang bersangkutan
                 continue;
             }
 
-            String tanggalTabel = model.getValueAt(i, 5).toString(); // Ambil string tanggal dari JTable kolom ke-5
+            String tanggalTabel = model.getValueAt(i, 5).toString();
             try {
                 java.util.Date tglBaris = sdf.parse(tanggalTabel);
 
                 com.agenda.model.tugas_kuliah temp = new com.agenda.model.tugas_kuliah();
                 temp.Deadline = tglBaris;
 
-                // Memanfaatkan polimorfisme method cekBentrok dari superclass agenda
                 if (temp.cekBentrok(tanggalObjek)) {
                     adaBentrok = true;
                     tanggalBentrok = tanggalTabel;
                     break;
                 }
             } catch (Exception e) {
-                // Abaikan jika terjadi kegagalan pembacaan baris eksternal
+                
             }
         }
 
-        // 6. Dialog Interupsi/Konfirmasi Bentrok Agenda
         if (adaBentrok) {
             int pilihan = javax.swing.JOptionPane.showConfirmDialog(
                     this,
@@ -311,11 +304,10 @@ public class tugas extends javax.swing.JFrame {
             );
 
             if (pilihan != javax.swing.JOptionPane.YES_OPTION) {
-                return; // Batalkan proses jika user menolak
+                return;
             }
         }
 
-        // 7. Mapping Data Inputan ke Objek Model Terpadu tugas_kuliah
         com.agenda.model.tugas_kuliah t = new com.agenda.model.tugas_kuliah();
         t.MataKuliah = matkul;
         t.TingkatKesulitan = kesulitan;

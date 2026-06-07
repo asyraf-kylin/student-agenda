@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 public class login extends javax.swing.JFrame {
  
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
-
     /**
      * Creates new form main
      */
@@ -132,14 +131,11 @@ public class login extends javax.swing.JFrame {
             return;
         }
 
-    // --- ALUR GUI -> OOP ---
         com.agenda.model.mahasiswa mhs = new com.agenda.model.mahasiswa();
-    
-    // Serahkan verifikasi login sepenuhnya ke objek mahasiswa (OOP -> SQL)
+
         if (mhs.loginDatabase(username, password)) {
             JOptionPane.showMessageDialog(this, "Login Berhasil! Selamat Datang " + mhs.getNama());
-        
-        // Buka menu utama dengan melempar nama user aktif
+            
             new menu(mhs.getNama()).setVisible(true);
             this.dispose();
         } else {

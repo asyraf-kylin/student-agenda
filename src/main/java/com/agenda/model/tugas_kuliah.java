@@ -17,7 +17,7 @@ public class tugas_kuliah extends agenda {
 
     public String MataKuliah;
     public String TingkatKesulitan;
-    public int Bobot; 
+    public int Bobot;
 
     @Override
     public void tandaiSelesai(int idData) {
@@ -32,7 +32,6 @@ public class tugas_kuliah extends agenda {
     }
 
     public int estimasiWaktu() {
-        // 1. Cek pertama kali: jika sudah selesai, langsung kembalikan 0
         if (this.StatusSelesai) {
             return 0;
         }
@@ -42,36 +41,31 @@ public class tugas_kuliah extends agenda {
         }
 
         try {
-            // 1. Ambil tanggal hari ini
             java.time.LocalDate hariIni = java.time.LocalDate.now();
 
-            // 2. Konversi java.sql.Timestamp ke java.time.LocalDate
             java.time.LocalDate tanggalDeadline = new java.util.Date(this.Deadline.getTime())
                     .toInstant()
                     .atZone(java.time.ZoneId.systemDefault())
                     .toLocalDate();
 
-            // 3. Hitung selisih hari
             long selisihHari = java.time.temporal.ChronoUnit.DAYS.between(hariIni, tanggalDeadline);
 
             return (int) selisihHari;
 
         } catch (Exception e) {
-            return -999; // Penanda jika terjadi error tanggal
+            return -999;
         }
     }
 
     public boolean tambahTugas(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
-            // Sesuai dengan kolom di phpMyAdmin Anda
             sql = "INSERT INTO tabel_tugas (MataKuliah, Deskripsi, Deadline, Bobot, TingkatKesulitan, Prioritas, StatusSelesai, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         } else {
             sql = "UPDATE tabel_tugas SET MataKuliah = ?, Deskripsi = ?, Deadline = ?, Bobot = ?, TingkatKesulitan = ?, Prioritas = ? WHERE id = ?";
         }
 
         try (Connection conn = koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
-            // PERBAIKAN: Urutan setXXX wajib sejajar dengan urutan kolom pada SQL di atas!
             pst.setString(1, this.MataKuliah);
             pst.setString(2, this.Deskripsi);
 
@@ -85,18 +79,17 @@ public class tugas_kuliah extends agenda {
             pst.setString(5, this.TingkatKesulitan);
             pst.setBoolean(6, this.Prioritas);
 
-            // Kondisional penanganan sisa parameter antara INSERT dan UPDATE
             if (!isEdit) {
-                pst.setBoolean(7, false); // StatusSelesai mula-mula diset false
+                pst.setBoolean(7, false);
                 pst.setString(8, username);
             } else {
-                pst.setInt(7, idData); // Mengisi nilai untuk WHERE id = ?
+                pst.setInt(7, idData);
             }
 
             return pst.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error Simpan Tugas: " + e.getMessage());
-            e.printStackTrace(); // Penting untuk melihat log error mendalam jika terjadi kegagalan runtime
+            e.printStackTrace();
             return false;
         }
     }

@@ -169,7 +169,6 @@ public class aksipengguna extends javax.swing.JFrame {
 
         if (konfirmasi == JOptionPane.YES_OPTION) {
 
-            // PERBAIKAN: Tentukan nama tabel secara dinamis
             String namaTabel = (agendaDipilih instanceof com.agenda.model.tugas_kuliah) ? "tabel_tugas" : "tabel_pertemuan";
             String sql = "DELETE FROM " + namaTabel + " WHERE id = ?";
 
@@ -180,7 +179,6 @@ public class aksipengguna extends javax.swing.JFrame {
                 if (pst.executeUpdate() > 0) {
                     JOptionPane.showMessageDialog(this, "Jadwal berhasil dihapus.");
 
-                    // PERBAIKAN: Refresh tabel JTable yang sesuai di menu utama
                     if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
                         mainForm.loadTabelTugas();
                     } else {
@@ -200,9 +198,8 @@ public class aksipengguna extends javax.swing.JFrame {
         if (agendaDipilih != null) {
             agendaDipilih.StatusSelesai = jCheckBox1.isSelected();
             
-            // Refresh visual tabel di menu utama
             if (mainForm != null) {
-                // mainForm.loadDataKeTabel(); 
+                
             }
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
@@ -215,7 +212,6 @@ public class aksipengguna extends javax.swing.JFrame {
 
         boolean statusBaru = jCheckBox1.isSelected();
 
-        // PERBAIKAN: Tentukan nama tabel secara dinamis
         String namaTabel = (agendaDipilih instanceof com.agenda.model.tugas_kuliah) ? "tabel_tugas" : "tabel_pertemuan";
         String sql = "UPDATE " + namaTabel + " SET StatusSelesai = ? WHERE id = ?";
 
@@ -227,7 +223,6 @@ public class aksipengguna extends javax.swing.JFrame {
             if (pst.executeUpdate() > 0) {
                 JOptionPane.showMessageDialog(this, "Status berhasil diperbarui!");
 
-                // PERBAIKAN: Refresh tabel JTable yang sesuai di menu utama
                 if (agendaDipilih instanceof com.agenda.model.tugas_kuliah) {
                     mainForm.loadTabelTugas();
                 } else {

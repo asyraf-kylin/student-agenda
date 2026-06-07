@@ -18,7 +18,6 @@ public class koneksi {
     private static final String USER = "root";
     private static final String PASS = "";
 
-    // Mengubah nama method menjadi getKoneksi() agar sinkron dengan file GUI & Model
     public static Connection getKoneksi() {
         Connection conn = null;
         try {

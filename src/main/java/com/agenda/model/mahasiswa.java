@@ -83,7 +83,7 @@ public class mahasiswa implements dokumen {
         String header = "";
         String namaBersih = (this.Nama != null && !this.Nama.isEmpty())
                 ? this.Nama.replaceAll("\\s+", "_")
-                : "user"; // <-- Ubah 'guest' jadi 'user' supaya lebih jelas
+                : "user";
 
         if (modeEkspor == 0) {
             fileName = "rekap_tugas_" + namaBersih + ".csv";

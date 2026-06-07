@@ -150,8 +150,6 @@ public class menu extends javax.swing.JFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                // PERBAIKAN 1: Indeks 4 (Estimasi) dihapus dari sini karena sekarang berisi String (teks), bukan Integer.
-                // Jadi hanya indeks 2 (Bobot) yang mengembalikan Integer.class
                 if (columnIndex == 2) {
                     return Integer.class;
                 }
@@ -183,15 +181,12 @@ public class menu extends javax.swing.JFrame {
                     boolean statusSelesai = rs.getBoolean("StatusSelesai");
                     java.sql.Timestamp deadlineTimestamp = rs.getTimestamp("Deadline");
 
-                    // 1. Buat Objek Tugas Kuliah
                     com.agenda.model.tugas_kuliah tempTugas = new com.agenda.model.tugas_kuliah();
                     tempTugas.Deadline = deadlineTimestamp;
-                    tempTugas.StatusSelesai = statusSelesai; // Masukkan status dari database ke objek
+                    tempTugas.StatusSelesai = statusSelesai;
 
-                    // 2. Panggil fungsi bawaan UML (menghasilkan angka int)
                     int sisaHari = tempTugas.estimasiWaktu();
 
-                    // 3. MANIPULASI TAMPILAN: Ubah hasil int menjadi String teks untuk JTable
                     String estimasiStr;
 
                     if (statusSelesai) {
@@ -203,34 +198,29 @@ public class menu extends javax.swing.JFrame {
                     } else if (sisaHari == 0) {
                         estimasiStr = "Hari Ini!";
                     } else {
-                        // Hilangkan tanda minus untuk teks terlambat
                         estimasiStr = "Terlambat " + Math.abs(sisaHari) + " Hari";
                     }
 
-                    // Format Tanggal untuk JTable
                     String tanggalTerformat = (deadlineTimestamp != null)
                             ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(deadlineTimestamp.getTime())) : "-";
 
                     boolean prioritas = rs.getBoolean("Prioritas");
 
-                    // 4. Masukkan string hasil manipulasi (estimasiStr) ke model tabel
                     model.addRow(new Object[]{
                         matkul, // 0
                         kesulitan, // 1
                         bobotStr, // 2
                         deskripsi, // 3
-                        estimasiStr, // 4 -> Di sini aman menerima String karena variabel di GUI sudah dikonversi
+                        estimasiStr, // 4 
                         tanggalTerformat, // 5
                         prioritas, // 6
                         statusSelesai // 7
                     });
 
-                    // Taktik GUI: Simpan ID data database di properti baris komponen tblTugas
                     int rowCount = model.getRowCount() - 1;
                     tblTugas.putClientProperty("id_row_" + rowCount, id);
                 }
 
-                // Update label statistik untuk Tugas
                 updateStatistikTugas();
             }
         } catch (java.sql.SQLException e) {
@@ -246,12 +236,11 @@ public class menu extends javax.swing.JFrame {
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tetap tidak bisa di-inline edit
+                return false;
             }
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                // Kolom Prioritas adalah indeks 5, Kolom Status adalah indeks 6
                 if (columnIndex == 5 || columnIndex == 6) {
                     return Boolean.class;
                 }
@@ -276,7 +265,6 @@ public class menu extends javax.swing.JFrame {
                     String lokasi = rs.getString("Lokasi");
                     String sesi = (rs.getString("Sesi") == null) ? "-" : rs.getString("Sesi");
 
-                    // Format Tanggal
                     java.sql.Timestamp deadlineTimestamp = rs.getTimestamp("Deadline");
                     String tanggalTerformat = (deadlineTimestamp != null)
                             ? new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date(deadlineTimestamp.getTime())) : "-";
@@ -284,7 +272,6 @@ public class menu extends javax.swing.JFrame {
                     boolean prioritas = rs.getBoolean("Prioritas");
                     boolean statusSelesai = rs.getBoolean("StatusSelesai");
 
-                    // MASUKKAN KE TABEL (Urutan harus sesuai dengan header di atas)
                     model.addRow(new Object[]{
                         matkul, // 0
                         lokasi, // 1
@@ -295,7 +282,6 @@ public class menu extends javax.swing.JFrame {
                         statusSelesai // 6 
                     });
 
-                    // Taktik GUI: Simpan ID di properti baris
                     int rowCount = model.getRowCount() - 1;
                     tblPertemuan.putClientProperty("id_row_" + rowCount, id);
                 }
@@ -1155,7 +1141,6 @@ public class menu extends javax.swing.JFrame {
                 return;
             }
 
-            // Taktik GUI: Ambil ID database yang kita titipkan tadi di baris JTable
             Object idProp = tblTugas.getClientProperty("id_row_" + row);
             if (idProp == null) {
                 return;
@@ -1163,26 +1148,24 @@ public class menu extends javax.swing.JFrame {
             int idTerpilih = (int) idProp;
 
             com.agenda.model.tugas_kuliah tugasObj = null;
-            // Tarik data paling *fresh* langsung dari database menggunakan ID
             String sql = "SELECT * FROM tabel_tugas WHERE id = ? AND username = ?";
 
             try (java.sql.Connection conn = com.agenda.util.koneksi.getKoneksi(); java.sql.PreparedStatement pst = conn.prepareStatement(sql)) {
 
                 pst.setInt(1, idTerpilih);
-                pst.setString(2, currentUser); // Menggunakan variabel session aktif di menu.java
+                pst.setString(2, currentUser);
 
                 try (java.sql.ResultSet rs = pst.executeQuery()) {
                     if (rs.next()) {
                         tugasObj = new com.agenda.model.tugas_kuliah();
 
-                        // JANGAN ISI ID KE MODEL (karena ID dikelola terpisah di GUI)
                         tugasObj.MataKuliah = rs.getString("MataKuliah");
                         tugasObj.Deskripsi = rs.getString("Deskripsi");
                         tugasObj.Deadline = rs.getTimestamp("Deadline");
 
                         // Properti khusus tugas_kuliah
                         tugasObj.TingkatKesulitan = rs.getString("TingkatKesulitan");
-                        tugasObj.Bobot = rs.getInt("Bobot"); // Menggunakan nama kolom 'Bobot' yang sudah kita perbaiki
+                        tugasObj.Bobot = rs.getInt("Bobot");
 
                         tugasObj.Prioritas = rs.getBoolean("Prioritas");
                         tugasObj.StatusSelesai = rs.getBoolean("StatusSelesai");
@@ -1192,7 +1175,6 @@ public class menu extends javax.swing.JFrame {
                 System.err.println("Error Ambil Detail Tugas: " + e.getMessage());
             }
 
-            // PANGGIL AKSIPENGGUNA dengan 3 parameter (Induk, Model, ID)
             if (tugasObj != null) {
                 new com.agenda.view.aksipengguna(this, tugasObj, idTerpilih).setVisible(true);
             }
@@ -1208,7 +1190,6 @@ public class menu extends javax.swing.JFrame {
             return;
         }
 
-        // Taktik GUI: Ambil ID database yang kita titipkan tadi
         Object idProp = tblPertemuan.getClientProperty("id_row_" + row);
         if (idProp == null) {
             return;
@@ -1227,7 +1208,6 @@ public class menu extends javax.swing.JFrame {
             try (java.sql.ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     pertemuan = new com.agenda.model.pertemuan_kuliah();
-                    // JANGAN ISI ID KE MODEL (karena ID tidak ada di UML/Model)
                     pertemuan.MataKuliah = rs.getString("MataKuliah");
                     pertemuan.Deskripsi = rs.getString("Deskripsi");
                     pertemuan.Deadline = rs.getTimestamp("Deadline");
@@ -1241,7 +1221,6 @@ public class menu extends javax.swing.JFrame {
             System.err.println("Error Ambil Detail Pertemuan: " + e.getMessage());
         }
 
-        // PANGGIL AKSIPENGGUNA dengan 3 parameter (Induk, Model, ID)
         if (pertemuan != null) {
             new com.agenda.view.aksipengguna(this, pertemuan, idTerpilih).setVisible(true);
             }
