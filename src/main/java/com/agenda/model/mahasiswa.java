@@ -84,46 +84,48 @@ public class mahasiswa implements dokumen {
         String namaBersih = (this.Nama != null && !this.Nama.isEmpty())
                 ? this.Nama.replaceAll("\\s+", "_")
                 : "user";
-
         if (modeEkspor == 0) {
             fileName = "rekap_tugas_" + namaBersih + ".csv";
             header = "Mata Kuliah,Tingkat Kesulitan,Bobot,Deskripsi,Deadline,Prioritas,Status Selesai";
-            sql = "SELECT MataKuliah, TingkatKesulitan, Bobot, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_tugas";
+            sql = "SELECT MataKuliah, TingkatKesulitan, Bobot, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_tugas WHERE username =?";
         } else if (modeEkspor == 1) {
             fileName = "rekap_pertemuan_" + namaBersih + ".csv";
             header = "Mata Kuliah,Lokasi,Deskripsi,Sesi,Deadline (Tanggal),Prioritas,Status Selesai";
-            sql = "SELECT MataKuliah, Lokasi, Deskripsi, Sesi, Deadline, Prioritas, StatusSelesai FROM tabel_pertemuan";
+            sql = "SELECT MataKuliah, Lokasi, Deskripsi, Sesi, Deadline, Prioritas, StatusSelesai FROM tabel_pertemuan WHERE username =?";
         } else if (modeEkspor == 2) {
             fileName = "rekap_kegiatan_" + namaBersih + ".csv";
             header = "Nama Kegiatan,Lokasi,Anggota,Deskripsi,Deadline (Tanggal),Prioritas,Status Selesai";
-            sql = "SELECT NamaKegiatan, Lokasi, Anggota, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_kegiatan";
+            sql = "SELECT NamaKegiatan, Lokasi, Anggota, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_kegiatan WHERE username = ?";
         } else if (modeEkspor == 3) {
             fileName = "rekap_belajar_" + namaBersih + ".csv";
             header = "Mata Kuliah,Materi,Durasi,Deskripsi,Deadline (Tanggal),Prioritas,Status Selesai";
-            sql = "SELECT MataKuliah, Materi, Durasi, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_belajar";
+            sql = "SELECT MataKuliah, Materi, Durasi, Deskripsi, Deadline, Prioritas, StatusSelesai FROM tabel_belajar WHERE username = ?";
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error: Mode ekspor tidak valid (" + modeEkspor + ")");
+            return;
         }
-
-        try (Connection conn = koneksi.getKoneksi(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql); java.io.FileWriter writer = new java.io.FileWriter(fileName)) {
-
-            writer.append(header).append("\n");
-
-            while (rs.next()) {
-                ResultSetMetaData meta = rs.getMetaData();
-                for (int i = 1; i <= meta.getColumnCount(); i++) {
-                    String val = rs.getString(i);
-                    writer.append(val != null ? val : "-");
-                    if (i < meta.getColumnCount()) {
-                        writer.append(",");
+        try (Connection conn = koneksi.getKoneksi(); PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, this.Nama);
+            try (ResultSet rs = pst.executeQuery(); java.io.FileWriter writer = new java.io.FileWriter(fileName)) {
+                writer.append(header).append("\n");
+                while (rs.next()) {
+                    ResultSetMetaData meta = rs.getMetaData();
+                    for (int i = 1; i <= meta.getColumnCount(); i++) {
+                        String val = rs.getString(i);
+                        writer.append(val != null ? val : "-");
+                        if (i < meta.getColumnCount()) {
+                            writer.append(",");
+                        }
                     }
+                    writer.append("\n");
                 }
-                writer.append("\n");
-            }
-            writer.flush();
-            javax.swing.JOptionPane.showMessageDialog(null, "Data berhasil diekspor ke: " + fileName);
+                writer.flush();
+                javax.swing.JOptionPane.showMessageDialog(null, "Data berhasil diekspor ke: " + fileName);
+            }                    
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(null, "Error Export: " + e.getMessage());
-        }
-    }
+        }                        
+    }                            
 
     @Override
     public void simpanTxt() {
