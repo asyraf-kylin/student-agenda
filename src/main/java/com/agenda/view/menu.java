@@ -26,7 +26,7 @@ public class menu extends javax.swing.JFrame {
     initComponents();
     this.setLocationRelativeTo(null);
     setAppIcon();
-    labelwelcome.setText("Selamat datang di AgendaKu, " + namaUser + " 👋");
+    labelwelcome.setText("Selamat datang di AgendaKu, " + namaUser);
     tampilkanWaktu();
     this.setTitle("AgendaKu - Aplikasi Manajemen Agenda");
     
