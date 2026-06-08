@@ -185,9 +185,9 @@ public class aksipengguna extends javax.swing.JFrame {
             namaTabel = "tabel_tugas";
         } else if (agendaDipilih instanceof com.agenda.model.pertemuan_kuliah) {
             namaTabel = "tabel_pertemuan";
-        } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) { // <-- TAMBAHAN
+        } else if (agendaDipilih instanceof com.agenda.model.belajar_mandiri) {
             namaTabel = "tabel_belajar";
-        } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) {    // <-- TAMBAHAN
+        } else if (agendaDipilih instanceof com.agenda.model.kegiatan_ukm) { 
             namaTabel = "tabel_kegiatan";
         }
 

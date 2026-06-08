@@ -28,6 +28,11 @@ public class kegiatan extends javax.swing.JFrame {
             textDeskripsi.setText(kegiatan.Deskripsi);
             textNamaKegiatan.setText(kegiatan.NamaKegiatan);
             textLokasi.setText(kegiatan.Lokasi);
+            
+            if (kegiatan.Deadline != null) {
+            java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            textDeadline.setText(formatGUI.format(kegiatan.Deadline));
+            }
     
     // Gabungkan array anggota menjadi satu string dipisahkan koma untuk JTextField
             if (kegiatan.Anggota != null) {

@@ -30,6 +30,11 @@ public class belajar extends javax.swing.JFrame {
             TextMateri.setText(belajar.Materi);
             textDurasi.setText(String.valueOf(belajar.Durasi));
             comboPrioritas.setSelectedItem(belajar.Prioritas ? "Tinggi" : "Biasa");
+        
+            if (belajar.Deadline != null) {
+            java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
+            textDeadline.setText(formatGUI.format(belajar.Deadline));
+            }
     
     // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
             btnSave.setText("Update");
