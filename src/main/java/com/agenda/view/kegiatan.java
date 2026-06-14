@@ -14,7 +14,6 @@ public class kegiatan extends javax.swing.JFrame {
     private menu mainForm;
     private int idTarget = -1;
 
-// Constructor Mode Edit
     public kegiatan(menu mainForm, com.agenda.model.kegiatan_ukm kegiatan, int idData) {
         initComponents();
         this.mainForm = mainForm;
@@ -23,7 +22,6 @@ public class kegiatan extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     
-    // Set field form input secara otomatis dari data lama
         if (kegiatan != null) {
             textDeskripsi.setText(kegiatan.Deskripsi);
             textNamaKegiatan.setText(kegiatan.NamaKegiatan);
@@ -33,15 +31,13 @@ public class kegiatan extends javax.swing.JFrame {
             java.text.SimpleDateFormat formatGUI = new java.text.SimpleDateFormat("dd/MM/yyyy");
             textDeadline.setText(formatGUI.format(kegiatan.Deadline));
             }
-    
-    // Gabungkan array anggota menjadi satu string dipisahkan koma untuk JTextField
+
             if (kegiatan.Anggota != null) {
                 textAnggota.setText(String.join(", ", kegiatan.Anggota));
             }
     
             comboPrioritas.setSelectedItem(kegiatan.Prioritas ? "Tinggi" : "Biasa");
     
-    // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
             btnSave.setText("Update");
         }
     }
@@ -271,7 +267,6 @@ public class kegiatan extends javax.swing.JFrame {
             return;
         }
 
-        // PARSING STRING KE OBJEK DATE
         java.util.Date tanggalObjek = null;
         try {
             java.text.SimpleDateFormat formatAsal = new java.text.SimpleDateFormat("dd/MM/yyyy");
@@ -283,12 +278,10 @@ public class kegiatan extends javax.swing.JFrame {
 
         boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
 
-        // BUAT OBJEK MODEL
         com.agenda.model.kegiatan_ukm k = new com.agenda.model.kegiatan_ukm();
         k.NamaKegiatan = namaKegiatan;
         k.Lokasi = lokasi;
 
-        // Pecah string teks menjadi array sesuai spesifikasi model kegiatan_ukm
         if (!anggota.isEmpty()) {
             k.Anggota = anggota.split(",\\s*");
         } else {
@@ -302,7 +295,6 @@ public class kegiatan extends javax.swing.JFrame {
         boolean isEdit = (dataEdit != null);
         String username = (mainForm != null) ? mainForm.getCurrentUser() : "";
 
-        // PANGGIL METHOD DARI MODEL
         if (k.tambahKegiatan(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Data Kegiatan Berhasil Disimpan!" : "Data Kegiatan Berhasil Diperbarui!");
             if (mainForm != null) {

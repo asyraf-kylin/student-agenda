@@ -14,7 +14,6 @@ public class belajar extends javax.swing.JFrame {
     private menu mainForm;
     private int idTarget = -1;
 
-// Constructor Mode Edit
     public belajar(menu mainForm, com.agenda.model.belajar_mandiri belajar, int idData) {
         initComponents();
         this.mainForm = mainForm;
@@ -23,7 +22,6 @@ public class belajar extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Agar tidak menutup menu utama
     
-    // Set field form input secara otomatis dari data lama
         if (belajar != null) {
             textDeskripsi.setText(belajar.Deskripsi);
             textMatkul.setText(belajar.MataKuliah);
@@ -36,13 +34,10 @@ public class belajar extends javax.swing.JFrame {
             textDeadline.setText(formatGUI.format(belajar.Deadline));
             }
     
-    // Ubah teks tombol Simpan menjadi Update sebagai tanda visual
             btnSave.setText("Update");
         }
     }
-    /**
-     * Creates new form NewJFrame
-     */
+    
     public belajar() {
         initComponents();
     }
@@ -265,7 +260,6 @@ public class belajar extends javax.swing.JFrame {
             return;
         }
 
-        // PARSING STRING KE OBJEK DATE SEPERTI DI PERTEMUAN.JAVA
         java.util.Date tanggalObjek = null;
         try {
             java.text.SimpleDateFormat formatAsal = new java.text.SimpleDateFormat("dd/MM/yyyy");
@@ -277,7 +271,6 @@ public class belajar extends javax.swing.JFrame {
 
         boolean prioritas = comboPrioritas.getSelectedItem().toString().equals("Tinggi");
 
-        // BUAT OBJEK MODEL
         com.agenda.model.belajar_mandiri b = new com.agenda.model.belajar_mandiri();
         b.MataKuliah = matkul;
         b.Materi = materi;
@@ -289,7 +282,6 @@ public class belajar extends javax.swing.JFrame {
         boolean isEdit = (dataEdit != null);
         String username = (mainForm != null) ? mainForm.getCurrentUser() : "";
 
-        // PANGGIL METHOD DARI MODEL, BUKAN RAW SQL!
         if (b.tambahBelajar(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Data Pembelajaran Berhasil Disimpan!" : "Data Pembelajaran Berhasil Diperbarui!");
             if (mainForm != null) {

@@ -13,9 +13,7 @@ import javax.swing.JOptionPane;
 public class login extends javax.swing.JFrame {
  
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
-    /**
-     * Creates new form main
-     */
+  
     public login() {
         initComponents();
         this.setLocationRelativeTo(null);

@@ -300,7 +300,6 @@ public class pertemuan extends javax.swing.JFrame {
                     javax.swing.JOptionPane.WARNING_MESSAGE
             );
 
-            // Jika user menekan tombol 'No' (Batal) atau menutup dialog, batalkan proses penyimpanan
             if (pilihan != javax.swing.JOptionPane.YES_OPTION) {
                 return;
             }
@@ -317,11 +316,9 @@ public class pertemuan extends javax.swing.JFrame {
         boolean isEdit = (dataEdit != null);
         String username = mainForm.getCurrentUser();
 
-        // Gunakan idTarget (dari GUI) bukan dataEdit.id (dari Model)
         if (p.tambahPertemuan(isEdit, username, this.idTarget)) {
             javax.swing.JOptionPane.showMessageDialog(this, !isEdit ? "Pertemuan berhasil dijadwalkan!" : "Pertemuan berhasil diperbarui!");
 
-            // Refresh tabel di menu utama
             mainForm.loadTabelPertemuan();
             this.dispose();
         } else {

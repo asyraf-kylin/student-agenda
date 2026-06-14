@@ -18,9 +18,6 @@ public class menu extends javax.swing.JFrame {
     private String currentUser;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(menu.class.getName());
     
-    /**
-     * Creates new form login
-     */
     public menu(String namaUser) {
     this.currentUser = namaUser;
     initComponents();
@@ -142,7 +139,6 @@ public class menu extends javax.swing.JFrame {
         int selesai = 0;
         int belumSelesai = 0;
 
-        // Asumsi kolom status ada di index ke-6
         int kolomStatusIdx = 6;
 
         for (int i = 0; i < total; i++) {
@@ -157,7 +153,6 @@ public class menu extends javax.swing.JFrame {
             }
         }
 
-        // Ganti nama label sesuai dengan yang ada di desain Form Anda
         totKegiatan.setText(String.valueOf(total));
         lblKegiatanBelum.setText(String.valueOf(belumSelesai));
         lblKegiatanSelesai.setText(String.valueOf(selesai));
@@ -169,7 +164,6 @@ public class menu extends javax.swing.JFrame {
         int selesai = 0;
         int belumSelesai = 0;
 
-        // Asumsi kolom status ada di index ke-6
         int kolomStatusIdx = 6;
 
         for (int i = 0; i < total; i++) {
@@ -184,7 +178,6 @@ public class menu extends javax.swing.JFrame {
             }
         }
 
-        // Ganti nama label sesuai dengan yang ada di desain Form Anda
         totBelajar.setText(String.valueOf(total));
         lblBelajarBelum.setText(String.valueOf(belumSelesai));
         lblBelajarSelesai.setText(String.valueOf(selesai));
@@ -373,7 +366,6 @@ public class menu extends javax.swing.JFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                // Kolom 5 (Prioritas) dan 6 (Status) menjadi Checkbox
                 if (columnIndex == 5 || columnIndex == 6) {
                     return Boolean.class;
                 }
@@ -390,7 +382,6 @@ public class menu extends javax.swing.JFrame {
             pst.setString(1, currentUser);
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    // Asumsi database menyimpan 1/0 atau boolean
                     boolean prioritas = rs.getBoolean("Prioritas");
                     boolean status = rs.getBoolean("StatusSelesai");
                     java.sql.Timestamp deadlineTs = rs.getTimestamp("Deadline");
@@ -1434,8 +1425,6 @@ public class menu extends javax.swing.JFrame {
                         kegiatan.Deskripsi = rs.getString("Deskripsi");
                         kegiatan.Deadline = rs.getTimestamp("Deadline");
                         kegiatan.Lokasi = rs.getString("Lokasi");
-
-                        // Konversi string anggota di database kembali ke array
                         String anggotaStr = rs.getString("Anggota");
                         kegiatan.Anggota = (anggotaStr != null && !anggotaStr.isEmpty()) ? anggotaStr.split(", ") : new String[0];
 
