@@ -4,6 +4,10 @@
  */
 package com.agenda.model;
 
+/**
+ *
+ * @author Ajax
+ */
 import java.util.Date;
 
 public abstract class agenda {

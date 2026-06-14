@@ -18,7 +18,6 @@ public class belajar_mandiri extends agenda {
     public String Materi;
     public int Durasi;
 
-    // Metode utama untuk Insert dan Update dari Form GUI
     public boolean tambahBelajar(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
@@ -34,7 +33,6 @@ public class belajar_mandiri extends agenda {
             pst.setInt(3, this.Durasi);
             pst.setString(4, this.Deskripsi);
 
-            // Penanganan Deadline (Konsisten dengan model lain)
             if (this.Deadline != null) {
                 pst.setDate(5, new java.sql.Date(this.Deadline.getTime()));
             } else {
@@ -44,10 +42,10 @@ public class belajar_mandiri extends agenda {
             pst.setBoolean(6, this.Prioritas);
 
             if (!isEdit) {
-                pst.setBoolean(7, false); // Default StatusSelesai
+                pst.setBoolean(7, false);
                 pst.setString(8, username);
             } else {
-                pst.setInt(7, idData); // Parameter WHERE id = ?
+                pst.setInt(7, idData);
             }
 
             return pst.executeUpdate() > 0;
@@ -57,7 +55,6 @@ public class belajar_mandiri extends agenda {
         }
     }
 
-    // Wajib ada karena menginduk ke kelas abstrak "agenda"
     @Override
     public void tandaiSelesai(int idData) {
         this.StatusSelesai = true;

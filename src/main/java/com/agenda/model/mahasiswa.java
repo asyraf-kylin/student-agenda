@@ -4,6 +4,10 @@
  */
 package com.agenda.model;
 
+/**
+ *
+ * @author Ajax
+ */
 import com.agenda.service.dokumen;
 import com.agenda.util.koneksi;
 import java.sql.Connection;

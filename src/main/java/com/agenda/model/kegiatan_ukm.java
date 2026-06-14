@@ -18,13 +18,11 @@ public class kegiatan_ukm extends agenda {
     public String Lokasi;
     public String[] Anggota;
 
-    // Helper bawaan untuk merubah Array String menjadi satu string dipisah koma untuk SQL
     public String getAnggotaSebagaiString() {
         if (this.Anggota == null) return "";
         return String.join(", ", this.Anggota);
     }
-
-    // Gantikan simpanKeDatabase dan updateDiDatabase dengan metode tunggal ini
+    
     public boolean tambahKegiatan(boolean isEdit, String username, int idData) {
         String sql;
         if (!isEdit) {
@@ -37,7 +35,6 @@ public class kegiatan_ukm extends agenda {
             pst.setString(1, this.NamaKegiatan);
             pst.setString(2, this.Deskripsi);
 
-            // Penanganan Deadline (Konsisten dengan model lain)
             if (this.Deadline != null) {
                 pst.setDate(3, new java.sql.Date(this.Deadline.getTime()));
             } else {
@@ -49,10 +46,10 @@ public class kegiatan_ukm extends agenda {
             pst.setBoolean(6, this.Prioritas);
 
             if (!isEdit) {
-                pst.setBoolean(7, false); // Default StatusSelesai
+                pst.setBoolean(7, false);
                 pst.setString(8, username);
             } else {
-                pst.setInt(7, idData); // Parameter WHERE id = ?
+                pst.setInt(7, idData);
             }
 
             return pst.executeUpdate() > 0;
@@ -61,8 +58,7 @@ public class kegiatan_ukm extends agenda {
             return false;
         }
     }
-
-    // Wajib di-override karena menginduk ke kelas abstrak "agenda"
+    
     @Override
     public void tandaiSelesai(int idData) {
         this.StatusSelesai = true;
