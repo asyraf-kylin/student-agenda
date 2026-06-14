@@ -20,7 +20,7 @@ public class belajar extends javax.swing.JFrame {
         this.dataEdit = belajar;
         this.idTarget = idData;
         this.setLocationRelativeTo(null);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); // Agar tidak menutup menu utama
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     
         if (belajar != null) {
             textDeskripsi.setText(belajar.Deskripsi);
@@ -276,7 +276,7 @@ public class belajar extends javax.swing.JFrame {
         b.Materi = materi;
         b.Durasi = durasi;
         b.Deskripsi = deskripsi;
-        b.Deadline = tanggalObjek; // Masukkan objek waktu yang sudah valid
+        b.Deadline = tanggalObjek;
         b.Prioritas = prioritas;
 
         boolean isEdit = (dataEdit != null);
