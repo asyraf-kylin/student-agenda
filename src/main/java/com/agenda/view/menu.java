@@ -1427,7 +1427,6 @@ public class menu extends javax.swing.JFrame {
                         kegiatan.Lokasi = rs.getString("Lokasi");
                         String anggotaStr = rs.getString("Anggota");
                         kegiatan.Anggota = (anggotaStr != null && !anggotaStr.isEmpty()) ? anggotaStr.split(", ") : new String[0];
-
                         kegiatan.Prioritas = rs.getBoolean("Prioritas");
                         kegiatan.StatusSelesai = rs.getBoolean("StatusSelesai");
                     }
