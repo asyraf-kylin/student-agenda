@@ -1,1 +1,5 @@
-src/* linguist-language=Java
+# Memaksa semua file di folder tertentu dibaca sebagai Java
+*.java linguist-language=Java
+
+# Atau jika file Java kamu ada di dalam folder src:
+src/** linguist-language=Java
